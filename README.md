@@ -1,4 +1,8 @@
 # Front
+![Angular](https://img.shields.io/badge/Angular-19.0.6-red?style=flat-square&logo=angular)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6.2-blue?style=flat-square&logo=typescript)
+![RxJS](https://img.shields.io/badge/RxJS-7.8.0-critical?style=flat-square&logo=reactivex)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
 
