@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { LoginService } from './service/login.service';
 import { LoginRequest } from './models/login-rs';
 
@@ -21,7 +22,7 @@ export class LoginComponent {
     showPassword = false;
     activeTab: 'login' | 'registro' = 'login';
 
-  constructor(private loginService: LoginService) {}
+  constructor(private loginService: LoginService, private router: Router) {}
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -42,16 +43,22 @@ export class LoginComponent {
     this.loading = true;
     this.error = '';
 
-    this.loginService.login(this.username, this.password).subscribe({
-      next: (response) => {
+this.loginService.login(this.username, this.password).subscribe({
+      next: (response: any) => {
         console.log('✅ Respuesta del login:', response);
-        if (response.success) {
-          localStorage.setItem('token', response.data?.token || '');
-          localStorage.setItem('usuario', JSON.stringify(response.data?.usuario));
+        
+        // Cambiamos la validación: si viene un token, el login fue exitoso
+        if (response.token) {
+          // Extraemos 'token' y 'usuario' directamente de 'response'
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('usuario', JSON.stringify(response.usuario));
+          
           console.log('✅ Login exitoso');
           this.resetForm();
+          this.router.navigate(['/dashboard']);
         } else {
-          this.error = response.message || 'Error al iniciar sesión';
+          // Cambiamos 'message' por 'mensaje' según lo que envía tu API
+          this.error = response.mensaje || 'Error al iniciar sesión';
           console.log('❌ Error del servidor:', this.error);
         }
         this.loading = false;
@@ -64,7 +71,7 @@ export class LoginComponent {
         let mensajeError = 'Error de conexión con el servidor';
 
         if (err.status === 0) {
-          mensajeError = '🔌 Error de conexión: No se puede conectar al servidor en http://localhost:5001';
+          mensajeError = '🔌 Error de conexión: No se puede conectar al servidor';
         } else if (err.error?.message) {
           mensajeError = err.error.message;
         } else if (err.error?.error) {
@@ -122,7 +129,7 @@ export class LoginComponent {
         let mensajeError = 'Error de conexión con el servidor';
 
         if (err.status === 0) {
-          mensajeError = '🔌 Error de conexión: No se puede conectar al servidor en http://localhost:5001';
+          mensajeError = '🔌 Error de conexión: No se puede conectar al servidor';
         } else if (err.error?.message) {
           mensajeError = err.error.message;
         } else if (err.error?.error) {

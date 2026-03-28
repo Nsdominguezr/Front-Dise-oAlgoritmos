@@ -8,7 +8,7 @@ import { RespuestaLogin, RespuestaUsuarios } from '../models/respuesta-rs';
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = 'http://localhost:5001/api/auth';
+  private apiUrl = 'https://localhost:8000/api/auth';
 
   private getHeaders() {
     return new HttpHeaders({
