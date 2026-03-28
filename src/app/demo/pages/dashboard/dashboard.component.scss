@@ -1,0 +1,227 @@
+.dashboard-container {
+    min-height: 100vh;
+    // Mismo fondo base del login
+    background: linear-gradient(135deg, #3d2817 0%, #8B4513 50%, #D2691E 100%);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.dashboard-header {
+  // Adaptado al estilo de la tarjeta del login
+    background: linear-gradient(135deg, #2a1810 0%, #3d2817 50%, #4a3728 100%);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(218, 165, 32, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+
+.header-content {
+    h1 {
+    margin: 0 0 10px 0;
+      color: #FFD700; // Dorado del login
+    font-size: 28px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    letter-spacing: 1px;
+    }
+
+    p {
+    margin: 0;
+    color: #DAA520;
+    font-size: 16px;
+    font-weight: 400;
+    }
+}
+}
+
+.logout-button {
+  background: rgba(139, 0, 0, 0.3); // Rojo oscuro más acorde a la paleta
+    color: #FF6B6B;
+    border: 1px solid #8B0000;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+&:hover {
+    background: rgba(139, 0, 0, 0.5);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(139, 0, 0, 0.4);
+}
+
+&:active {
+    transform: translateY(0);
+}
+
+span {
+    font-size: 18px;
+}
+}
+
+.dashboard-content {
+    flex: 1;
+  // Fondo oscuro semitransparente para que resalte sobre el gradiente principal
+    background: rgba(42, 24, 16, 0.85);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(218, 165, 32, 0.2);
+    position: relative;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+
+.welcome-section {
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.2);
+    padding-bottom: 20px;
+
+    h2 {
+    margin: 0 0 10px 0;
+    color: #FFD700;
+    font-size: 24px;
+    font-weight: 600;
+    }
+
+    p {
+    margin: 0;
+    color: #DAA520;
+    font-size: 16px;
+    }
+}
+}
+
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.action-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 24px;
+  // Gradiente similar al botón de submit del login
+    background: linear-gradient(135deg, rgba(210, 105, 30, 0.8) 0%, rgba(218, 165, 32, 0.8) 100%);
+    color: #1a1a1a;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    font-weight: 700;
+    min-height: 160px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+.button-icon {
+    font-size: 38px;
+    color: #1a1a1a;
+    transition: transform 0.3s ease;
+}
+
+.button-text {
+    text-align: center;
+}
+
+&:hover {
+    transform: translateY(-5px);
+    background: linear-gradient(135deg, #D2691E 0%, #FFD700 100%);
+    box-shadow: 0 12px 25px rgba(218, 165, 32, 0.4);
+
+    .button-icon {
+    transform: scale(1.1);
+    }
+}
+
+&:active {
+    transform: translateY(-2px);
+}
+}
+
+/* Opcional: Agregar los círculos decorativos del login al fondo del dashboard */
+.dashboard-container::before,
+.dashboard-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.dashboard-container::before {
+    width: 400px;
+    height: 400px;
+    background: #FFD700;
+    top: -100px;
+    right: -100px;
+}
+
+.dashboard-container::after {
+    width: 300px;
+    height: 300px;
+    background: #DAA520;
+    bottom: -50px;
+    left: -50px;
+}
+
+@media (max-width: 768px) {
+.dashboard-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+
+    .header-content {
+    h1 {
+        font-size: 24px;
+    }
+    }
+}
+
+.dashboard-content {
+    padding: 20px;
+}
+
+.buttons-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+}
+
+.action-button {
+    min-height: 130px;
+    padding: 16px;
+
+    .button-icon {
+    font-size: 28px;
+    }
+
+    .button-text {
+    font-size: 13px;
+    }
+}
+}

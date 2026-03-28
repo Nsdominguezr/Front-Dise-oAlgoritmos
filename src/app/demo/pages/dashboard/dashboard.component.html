@@ -1,0 +1,50 @@
+<div class="dashboard-container">
+<div class="dashboard-header">
+    <div class="header-content">
+    <h1>Bar Don Juancho - Dashboard</h1>
+      <p *ngIf="usuario">Bienvenido, <strong>{{ usuario.username }}</strong></p>
+    </div>
+    <button class="logout-button" (click)="logout()">
+    <span>🚪</span> Cerrar Sesión
+    </button>
+</div>
+
+<div class="dashboard-content">
+    <div class="welcome-section">
+        <h2>Panel Principal</h2>
+        <p>Acciones disponibles:</p>
+    </div>
+
+    <div class="buttons-grid">
+    <button class="action-button">
+        <span class="button-icon">📦</span>
+        <span class="button-text">Gestionar Productos</span>
+    </button>
+
+    <button class="action-button">
+        <span class="button-icon">📋</span>
+        <span class="button-text">Gestionar Pedidos</span>
+    </button>
+
+    <button class="action-button">
+        <span class="button-icon">📊</span>
+        <span class="button-text">Reportes</span>
+    </button>
+
+    <button class="action-button">
+        <span class="button-icon">👥</span>
+        <span class="button-text">Gestionar Usuarios</span>
+    </button>
+
+    <button class="action-button">
+        <span class="button-icon">⚙️</span>
+        <span class="button-text">Configuración</span>
+    </button>
+
+    <button class="action-button">
+        <span class="button-icon">❓</span>
+        <span class="button-text">Ayuda</span>
+    </button>
+    </div>
+</div>
+</div>
