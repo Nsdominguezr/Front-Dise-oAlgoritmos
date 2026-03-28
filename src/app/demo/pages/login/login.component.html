@@ -1,0 +1,177 @@
+<div class="login-container">
+    <div class="login-content">
+    <!-- Header -->
+    <div class="login-header">
+    <h1>Bar Don Juancho</h1>
+    <p>¡Bienvenido! Por favor, inicia sesión o regístrate para continuar.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+    <button 
+        [class.active]="activeTab === 'login'"
+        (click)="switchTab('login')"
+        class="tab-button">
+        Iniciar Sesión
+    </button>
+    <button 
+        [class.active]="activeTab === 'registro'"
+        (click)="switchTab('registro')"
+        class="tab-button">
+        Registrarse
+    </button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="error-message">
+    <span class="error-icon">⚠️</span>
+    <p>{{ error }}</p>
+    </div>
+
+    <!-- Login Tab -->
+    <div *ngIf="activeTab === 'login'" class="form-container">
+    <form (ngSubmit)="onLogin()">
+        <!-- Username/Email -->
+        <div class="form-group">
+        <label for="login-username">Usuario o Email</label>
+        <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input 
+            type="text" 
+            id="login-username"
+            [(ngModel)]="username"
+            name="username"
+            placeholder="Ingresa tu usuario"
+            [disabled]="loading">
+        </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+        <label for="login-password">Contraseña</label>
+        <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="login-password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Ingresa tu contraseña"
+            [disabled]="loading">
+            <button 
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            [disabled]="loading">
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+        </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+        type="submit" 
+        class="submit-button"
+        [disabled]="loading">
+        {{ loading ? 'Cargando...' : 'Iniciar Sesión' }}
+        </button>
+    </form>
+    </div>
+
+    <!-- Registro Tab -->
+    <div *ngIf="activeTab === 'registro'" class="form-container">
+    <form (ngSubmit)="onRegistro()">
+        <!-- Username -->
+        <div class="form-group">
+        <label for="reg-username">Usuario</label>
+        <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input 
+            type="text" 
+            id="reg-username"
+            [(ngModel)]="username"
+            name="username"
+            placeholder="Elige un usuario único"
+            [disabled]="loading">
+        </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+        <label for="reg-password">Contraseña</label>
+        <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="reg-password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Mínimo 6 caracteres"
+            [disabled]="loading">
+            <button 
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            [disabled]="loading">
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+        </div>
+        </div>
+
+        <!-- Rol -->
+        <div class="form-group">
+        <label for="rol_id">Rol</label>
+        <div class="input-wrapper">
+            <span class="input-icon">👨‍💼</span>
+            <select 
+            id="rol_id"
+            [(ngModel)]="rol_id"
+            name="rol_id"
+            [disabled]="loading">
+            <option value="1">Mesero</option>
+            <option value="2">Cajero</option>
+            <option value="3">Admin</option>
+            </select>
+        </div>
+        </div>
+
+        <!-- Sede -->
+        <div class="form-group">
+        <label for="sede_id">Turno</label>
+        <div class="input-wrapper">
+            <span class="input-icon">🕐</span>
+            <select 
+            id="sede_id"
+            [(ngModel)]="sede_id"
+            name="sede_id"
+            [disabled]="loading">
+            <option value="1">Turno Mañana</option>
+            <option value="2">Turno Tarde</option>
+            <option value="3">Turno Noche</option>
+            </select>
+        </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+        type="submit" 
+        class="submit-button"
+        [disabled]="loading">
+        {{ loading ? 'Cargando...' : 'Registrarse' }}
+        </button>
+    </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+    <p>© 2026 Bar Don Juancho. Todos los derechos reservados.</p>
+    </div>
+</div>
+
+<!-- Decorative Elements -->
+<div class="decorative-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+</div>
+</div>
