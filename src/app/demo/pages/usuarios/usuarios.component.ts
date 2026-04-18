@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
@@ -14,10 +15,15 @@ interface Usuario {
   creado_en: string;
 }
 
+interface RolOpcion {
+  id: number;
+  nombre: string;
+}
+
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.scss']
 })
@@ -26,20 +32,32 @@ export class UsuariosComponent implements OnInit {
   loading = false;
   error = '';
 
+  // Modal de registro
+  mostrarModal = false;
+  registroLoading = false;
+  registroError = '';
+  registroExito = '';
+
+  // Campos del formulario
+  registroUsername = '';
+  registroPassword = '';
+  registroRolId: number | null = null;
+  registroSedeId: number | null = null;
+
+  roles: RolOpcion[] = [
+    { id: 2, nombre: 'Admin Local' },
+    { id: 3, nombre: 'Cajero' },
+    { id: 4, nombre: 'Mesero' }
+  ];
+
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     const token = this.authService.getToken();
-    if (token) {
-      console.log('🔐 Token enviado:', token);
-    }
-
-    if (!this.authService.isAuthenticated()) {
-      console.log('⏰ Token expirado, redirigiendo a login...');
+    if (!token) {
       this.router.navigate(['/login']);
       return;
     }
-
     this.obtenerUsuarios();
   }
 
@@ -47,12 +65,8 @@ export class UsuariosComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    console.log('📤 Solicitando lista de usuarios...');
-
     this.authService.obtenerUsuarios().subscribe({
       next: (response: any) => {
-        console.log('✅ Respuesta de usuarios:', response);
-
         if (Array.isArray(response)) {
           this.usuarios = response;
         } else {
@@ -62,9 +76,68 @@ export class UsuariosComponent implements OnInit {
         this.loading = false;
       },
       error: (err: any) => {
-        console.error('❌ Error al obtener usuarios:', err);
-        this.error = err.message || 'Error al cargar usuarios';
+        this.error = err.error?.mensaje || err.error?.message || 'Error al cargar usuarios';
         this.loading = false;
+      }
+    });
+  }
+
+  // --- Modal de registro ---
+  abrirModal(): void {
+    this.mostrarModal = true;
+    this.registroError = '';
+    this.registroExito = '';
+  }
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
+    this.resetForm();
+  }
+
+  resetForm(): void {
+    this.registroUsername = '';
+    this.registroPassword = '';
+    this.registroRolId = null;
+    this.registroSedeId = null;
+    this.registroError = '';
+    this.registroExito = '';
+    this.registroLoading = false;
+  }
+
+  registrarUsuario(): void {
+    if (!this.registroUsername || !this.registroPassword || !this.registroRolId || !this.registroSedeId) {
+      this.registroError = 'Todos los campos son obligatorios';
+      return;
+    }
+
+    if (this.registroPassword.length < 6) {
+      this.registroError = 'La contraseña debe tener al menos 6 caracteres';
+      return;
+    }
+
+    this.registroLoading = true;
+    this.registroError = '';
+    this.registroExito = '';
+
+    const payload = {
+      username: this.registroUsername,
+      password: this.registroPassword,
+      rol_id: this.registroRolId,
+      sede_id: this.registroSedeId
+    };
+
+    this.authService.registro(payload).subscribe({
+      next: (response: any) => {
+        this.registroLoading = false;
+        this.registroExito = response.mensaje || 'Usuario registrado exitosamente';
+        setTimeout(() => {
+          this.cerrarModal();
+          this.obtenerUsuarios();
+        }, 1500);
+      },
+      error: (err: any) => {
+        this.registroLoading = false;
+        this.registroError = err.error?.mensaje || 'Error al registrar usuario';
       }
     });
   }

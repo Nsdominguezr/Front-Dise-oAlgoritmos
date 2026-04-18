@@ -1,6 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { Subject, fromEvent, merge } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'app-dashboard',
@@ -9,10 +11,11 @@ import { Router, RouterLink } from '@angular/router';
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
     usuario: any = null;
-    inactivityTimer: any;
-    readonly INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos en milisegundos
+    private destroy$ = new Subject<void>();
+    private inactivityTimer: any;
+    private readonly INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos
 
     constructor(private router: Router) {}
 
@@ -22,15 +25,24 @@ export class DashboardComponent implements OnInit {
             this.usuario = JSON.parse(usuarioStorage);
             console.log('👤 Usuario cargado:', this.usuario);
         }
-        this.resetInactivityTimer();
+        this.setupInactivityTracking();
     }
 
-    @HostListener('window:click')
-    @HostListener('window:mousemove')
-    @HostListener('window:scroll')
-    @HostListener('window:keydown')
-    onActivity(): void {
+    private setupInactivityTracking(): void {
+        const events = ['click', 'mousemove', 'keydown', 'scroll'];
+        const activity$ = merge(
+            ...events.map(event => fromEvent(window, event))
+        ).pipe(
+            debounceTime(300),
+            takeUntil(this.destroy$)
+        );
+
         this.resetInactivityTimer();
+
+        activity$.subscribe(() => {
+            console.log('🟢 Actividad detectada, renovando sesión');
+            this.resetInactivityTimer();
+        });
     }
 
     private resetInactivityTimer(): void {
@@ -45,7 +57,13 @@ export class DashboardComponent implements OnInit {
     logout(): void {
         console.log('🚪 Cerrando sesión por inactividad...');
         localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
         localStorage.removeItem('usuario');
         this.router.navigate(['/login']);
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

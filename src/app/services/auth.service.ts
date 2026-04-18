@@ -21,9 +21,14 @@ export class AuthService {
   }
 
   registro(credentials: LoginRequest): Observable<RespuestaLogin> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
     return this.http.post<RespuestaLogin>(
       `${this.apiUrl}/registro`,
-      credentials
+      credentials,
+      { headers }
     );
   }
 
@@ -97,8 +102,11 @@ export class AuthService {
   /**
    * Reemplaza token expirado con uno nuevo
    */
-  actualizarToken(nuevoToken: string, expiraEn: string, usuario: any): void {
+  actualizarToken(nuevoToken: string, expiraEn: string, usuario: any, nuevoRefreshToken?: string): void {
     localStorage.setItem('token', nuevoToken);
+    if (nuevoRefreshToken) {
+      localStorage.setItem('refresh_token', nuevoRefreshToken);
+    }
     localStorage.setItem('usuario', JSON.stringify(usuario));
     console.log('🔄 Token renovado, expira:', expiraEn);
   }
