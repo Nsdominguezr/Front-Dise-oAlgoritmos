@@ -1,0 +1,58 @@
+<div class="usuarios-container">
+  <div class="usuarios-header">
+    <div class="header-content">
+      <h1>Gestión de Usuarios</h1>
+      <p>Lista de usuarios registrados en el sistema</p>
+    </div>
+    <button class="btn-volver" (click)="volverAlDashboard()">
+      ← Volver al Dashboard
+    </button>
+  </div>
+
+  <div class="usuarios-content">
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Cargando usuarios...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !loading" class="error-message">
+      <span class="error-icon">⚠️</span>
+      <p>{{ error }}</p>
+      <button (click)="obtenerUsuarios()">Reintentar</button>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div *ngIf="!loading && !error" class="usuarios-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Sede</th>
+            <th>Creado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let usuario of usuarios">
+            <td>{{ usuario.id }}</td>
+            <td>{{ usuario.username }}</td>
+            <td>
+              <span class="rol-badge" [ngClass]="getRolClase(usuario.rol.nombre)">
+                {{ usuario.rol.nombre }}
+              </span>
+            </td>
+            <td>{{ getSedeNombre(usuario.sede_id) }}</td>
+            <td>{{ formatearFecha(usuario.creado_en) }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="usuarios.length === 0" class="empty-state">
+        <p>No hay usuarios registrados</p>
+      </div>
+    </div>
+  </div>
+</div>
