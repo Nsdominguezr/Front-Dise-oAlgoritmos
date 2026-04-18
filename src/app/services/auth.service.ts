@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../demo/pages/login/models/login-rs';
 import { RespuestaLogin, RespuestaUsuarios } from '../demo/pages/login/models/respuesta-rs';
@@ -28,8 +28,13 @@ export class AuthService {
   }
 
   obtenerUsuarios(): Observable<RespuestaUsuarios> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
     return this.http.get<RespuestaUsuarios>(
-      `${this.apiUrl}/usuarios`
+      `${this.apiUrl}/usuarios`,
+      { headers }
     );
   }
 

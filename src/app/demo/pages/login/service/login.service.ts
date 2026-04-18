@@ -10,10 +10,12 @@ import { RespuestaLogin, RespuestaUsuarios } from '../models/respuesta-rs';
 export class LoginService {
   private apiUrl = 'https://localhost:8000/api/auth';
 
-  private getHeaders() {
+  private getAuthHeaders() {
+    const token = localStorage.getItem('token');
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`
     });
   }
 
@@ -24,7 +26,7 @@ export class LoginService {
     return this.http.post<RespuestaLogin>(
       `${this.apiUrl}/registro`,
       credentials,
-      { headers: this.getHeaders() }
+      { headers: this.getAuthHeaders() }
     );
   }
 
@@ -32,7 +34,7 @@ export class LoginService {
     console.log('📤 Obteniendo usuarios de:', `${this.apiUrl}/usuarios`);
     return this.http.get<RespuestaUsuarios>(
       `${this.apiUrl}/usuarios`,
-      { headers: this.getHeaders() }
+      { headers: this.getAuthHeaders() }
     );
   }
 
@@ -42,7 +44,7 @@ export class LoginService {
     return this.http.post<RespuestaLogin>(
       `${this.apiUrl}/login`,
       payload,
-      { headers: this.getHeaders() }
+      { headers: this.getAuthHeaders() }
     );
   }
 }
