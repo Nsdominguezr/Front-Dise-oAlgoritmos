@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Bar Don Juancho - Frontend
 =======
 # Front
