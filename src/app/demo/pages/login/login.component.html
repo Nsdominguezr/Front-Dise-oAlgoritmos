@@ -111,31 +111,31 @@
         <label for="rol_id">Rol</label>
         <div class="input-wrapper">
             <span class="input-icon">👨‍💼</span>
-            <select 
+            <select
             id="rol_id"
             [(ngModel)]="rol_id"
             name="rol_id"
             [disabled]="loading">
-            <option value="1">Mesero</option>
-            <option value="2">Cajero</option>
-            <option value="3">Admin</option>
+            <option value="2">Administrador Local</option>
+            <option value="3">Cajero</option>
+            <option value="4">Mesero</option>
             </select>
         </div>
         </div>
 
         <!-- Sede -->
         <div class="form-group">
-        <label for="sede_id">Turno</label>
+        <label for="sede_id">Sede</label>
         <div class="input-wrapper">
-            <span class="input-icon">🕐</span>
-            <select 
+            <span class="input-icon">🏪</span>
+            <select
             id="sede_id"
             [(ngModel)]="sede_id"
             name="sede_id"
             [disabled]="loading">
-            <option value="1">Turno Mañana</option>
-            <option value="2">Turno Tarde</option>
-            <option value="3">Turno Noche</option>
+            <option value="1">Sede Norte</option>
+            <option value="2">Sede Centro</option>
+            <option value="3">Sede Sur</option>
             </select>
         </div>
         </div>

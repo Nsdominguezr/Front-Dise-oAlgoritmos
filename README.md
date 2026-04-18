@@ -1,59 +1,129 @@
-# Front
+# Bar Don Juancho - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+Sistema de gestión táctil multi-sede para bares y restaurantes.
 
-## Development server
+## Tecnologias
 
-To start a local development server, run:
+- **Angular 19** con standalone components
+- **TypeScript**
+- **Bootstrap 5** (CSS base)
+- **SCSS** para estilos personalizados
+- **RxJS** para programación reactiva
 
+## Arquitectura
+
+```
+src/
+├── app/
+│   ├── guards/
+│   │   └── auth.guard.ts          # Protección de rutas autenticadas
+│   ├── interceptors/
+│   │   └── auth.interceptor.ts    # Inyección automática de JWT
+│   ├── services/
+│   │   └── auth.service.ts       # Servicio centralizado de autenticación
+│   ├── demo/
+│   │   └── pages/
+│   │       ├── login/            # Login y Registro de usuarios
+│   │       └── dashboard/        # Panel principal
+│   ├── app.config.ts              # Configuración de providers
+│   └── app.routes.ts             # Rutas de la aplicación
+```
+
+## Funcionalidades Implementadas
+
+### Épica 1: Arquitectura Base
+- ✅ Setup del proyecto Angular
+- ✅ Diseño responsive en español
+- ✅ API Gateway con enrutamiento estático
+
+### Épica 2: Autenticación y Servicio de Identidad
+- ✅ Modelo estricto de roles (1=Admin Global, 2=Admin Local, 3=Cajero, 4=Mesero)
+- ✅ Registro de usuarios administrativos
+- ✅ Login con JWT (8 horas de expiración)
+- ✅ Interceptor HTTP para inyección automática de token
+- ✅ Auth Guard para protección de rutas
+- ✅ Auto-cierre de sesión tras 5 minutos de inactividad
+
+## Roles del Sistema
+
+| ID | Rol | Descripción |
+|----|-----|-------------|
+| 1 | Admin Global | Acceso total al sistema (creado solo desde BD) |
+| 2 | Admin Local | Administrador de sede específica |
+| 3 | Cajero | Gestión de caja y cobros |
+| 4 | Mesero | Toma de pedidos en mesas |
+
+## Endpoints del API Gateway
+
+| Ruta | Microservicio | Puerto |
+|------|--------------|--------|
+| `/api/auth/*` | service_master | 5001 |
+| `/api/sedes/*` | service_master | 5002 |
+| `/api/productos/*` | service_master | 5002 |
+
+## Desarrollo
+
+### Levantar el servidor de desarrollo
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Acceder a: `http://localhost:4200/`
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+### Levantar el backend (requisito previo)
 ```bash
-ng generate component component-name
+# API Gateway
+cd ../back/api_gateway && python app.py
+
+# Service Master (en otra terminal)
+cd ../back/service_master && python app.py
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Credenciales de Prueba
 
-```bash
-ng generate --help
+Después de crear un usuario Admin Global desde la base de datos:
+
+```
+Username: admin_principal
+Password: (la que definas en BD)
+Rol: Admin Global (1)
+Sede: 1
 ```
 
-## Building
+## Flujo de Autenticación
 
-To build the project run:
+1. Usuario ingresa credenciales en `/login`
+2. API Gateway reenvía a `service_master:5001`
+3. Backend valida y devuelve JWT
+4. Frontend almacena token en `localStorage`
+5. AuthInterceptor inyecta token en todas las peticiones
+6. AuthGuard protege rutas que requieren autenticación
 
-```bash
-ng build
+## Estructura de Datos
+
+### Usuario (localStorage)
+```json
+{
+  "id": 1,
+  "username": "admin_principal",
+  "rol": {
+    "id": 1,
+    "nombre": "Admin Global"
+  },
+  "sede_id": 1
+}
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+### Token JWT (localStorage)
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-## Running end-to-end tests
+## Criterios de Aceptación Verificados
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- ✅ Login exitoso devuelve JWT
+- ✅ Login fallido devuelve error 401
+- ✅ Dashboard accesible solo con token válido
+- ✅ Sesión se cierra tras 5 min exactos sin actividad
+- ✅ Todas las textos en español
+- ✅ Diseño responsive para pantallas táctiles
