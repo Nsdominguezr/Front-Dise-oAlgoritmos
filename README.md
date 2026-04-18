@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 641a8dbb91028bfe6087450f536fdda6edc48737
 # Bar Don Juancho - Frontend
 
 ![Angular](https://img.shields.io/badge/Angular-19.0.6-red?style=flat-square&logo=angular)
