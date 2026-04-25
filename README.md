@@ -1,3 +1,4 @@
+Hola
 # Bar Don Juancho - Frontend
 
 Sistema de gestión táctil multi-sede para bares y restaurantes. Interfaz frontend desarrollada en Angular 19 para operación en pantallas táctiles.
