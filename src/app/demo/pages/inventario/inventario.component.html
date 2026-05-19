@@ -1,0 +1,197 @@
+<div class="inventario-container">
+  <div class="page-header">
+    <button class="back-button" (click)="volverAlDashboard()">
+      <span>←</span> Back
+    </button>
+    <h1>Inventory Management</h1>
+    <div class="header-actions">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header">
+      <h2>Stock by Location</h2>
+      <select class="form-select w-auto" [(ngModel)]="sedeSeleccionada" (change)="onSedeChange()">
+        <option [ngValue]="null" disabled>Select a location</option>
+        <option *ngFor="let sede of sedes" [ngValue]="sede.id">{{ sede.nombre }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3 d-flex gap-2">
+      <button class="btn-primary" (click)="abrirModalIngreso()" [disabled]="!sedeSeleccionada">
+        <span>+</span> Stock In
+      </button>
+      <button class="btn-primary" (click)="abrirModalMerma()" [disabled]="!sedeSeleccionada">
+        <span>-</span> Stock Out
+      </button>
+      <button class="btn-secondary" (click)="verHistorial()" [disabled]="!sedeSeleccionada">
+        <span>↺</span> History
+      </button>
+      <button class="btn-secondary" (click)="obtenerStock()" [disabled]="!sedeSeleccionada">
+        <span>⟳</span> Refresh
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+
+    <div *ngIf="error && !loading" class="error-message">{{ error }}</div>
+
+    <div *ngIf="!loading && inventarios.length === 0" class="empty-state">
+      No products in inventory for this location.
+    </div>
+
+    <table *ngIf="!loading && inventarios.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of inventarios">
+          <td>{{ item.id }}</td>
+          <td>{{ getProductoNombre(item.producto_id) }}</td>
+          <td>
+            <span [class.text-danger]="item.cantidad < 5" [class.text-success]="item.cantidad >= 5">
+              {{ item.cantidad }}
+            </span>
+          </td>
+          <td>
+            <span *ngIf="item.cantidad < 5" class="badge-low">Low Stock</span>
+            <span *ngIf="item.cantidad >= 5" class="badge-ok">Available</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Stock In -->
+<div *ngIf="mostrarModalIngreso" class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Stock In</h3>
+      <button class="close-button" (click)="cerrarModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="formExito" class="success-message">{{ formExito }}</div>
+      <div *ngIf="formError" class="error-message">{{ formError }}</div>
+
+      <div class="form-group">
+        <label for="producto">Product *</label>
+        <select class="form-select" [(ngModel)]="productoSeleccionado" id="producto">
+          <option [ngValue]="null" disabled>Select a product</option>
+          <option *ngFor="let producto of productos" [ngValue]="producto.id">
+            {{ producto.nombre }} - ${{ producto.precio }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="cantidad">Quantity *</label>
+        <input type="number" id="cantidad" [(ngModel)]="cantidad" min="1" step="1" placeholder="Enter quantity">
+      </div>
+
+      <div class="form-group">
+        <label for="observacion">Note</label>
+        <textarea id="observacion" [(ngModel)]="observacion" rows="2" placeholder="Optional observation"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="cerrarModal()">Cancel</button>
+        <button type="button" class="btn-primary" (click)="registrarIngreso()" [disabled]="formLoading">
+          {{ formLoading ? 'Saving...' : 'Register' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Stock Out (Merma) -->
+<div *ngIf="mostrarModalMerma" class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Stock Out</h3>
+      <button class="close-button" (click)="cerrarModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="formExito" class="success-message">{{ formExito }}</div>
+      <div *ngIf="formError" class="error-message">{{ formError }}</div>
+
+      <div class="form-group">
+        <label for="productoMerma">Product *</label>
+        <select class="form-select" [(ngModel)]="productoSeleccionado" id="productoMerma">
+          <option [ngValue]="null" disabled>Select a product</option>
+          <option *ngFor="let item of inventarios" [ngValue]="item.producto_id">
+            {{ getProductoNombre(item.producto_id) }} (Stock: {{ item.cantidad }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="cantidadMerma">Quantity *</label>
+        <input type="number" id="cantidadMerma" [(ngModel)]="cantidad" min="1" step="1" placeholder="Enter quantity">
+      </div>
+
+      <div class="form-group">
+        <label for="observacionMerma">Note</label>
+        <textarea id="observacionMerma" [(ngModel)]="observacion" rows="2" placeholder="Optional observation"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="cerrarModal()">Cancel</button>
+        <button type="button" class="btn-primary" (click)="registrarMerma()" [disabled]="formLoading">
+          {{ formLoading ? 'Saving...' : 'Register' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal History -->
+<div *ngIf="mostrarHistorial" class="modal-overlay" (click)="cerrarHistorial()">
+  <div class="modal-content modal-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Movement History</h3>
+      <button class="close-button" (click)="cerrarHistorial()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="movimientos.length === 0" class="empty-state">
+        No movements recorded.
+      </div>
+
+      <table *ngIf="movimientos.length > 0" class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mov of movimientos">
+            <td>{{ formatearFecha(mov.fecha) }}</td>
+            <td>
+              <span [class.badge-in]="mov.tipo_movimiento === 'INGRESO'" [class.badge-out]="mov.tipo_movimiento === 'MERMA'">
+                {{ mov.tipo_movimiento === 'INGRESO' ? 'In' : 'Out' }}
+              </span>
+            </td>
+            <td>{{ mov.cantidad }}</td>
+            <td>{{ mov.observacion || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="cerrarHistorial()">Close</button>
+    </div>
+  </div>
+</div>

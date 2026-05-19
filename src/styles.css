@@ -1,5 +1,12 @@
 /* Global Theme Variables */
 :root,
+[data-theme="dark"],
+[data-theme="light"] {
+  /* Add transition for theme changes */
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+:root,
 [data-theme="dark"] {
   /* Modo noche - Dark theme */
   --bg-base: #0F1117;

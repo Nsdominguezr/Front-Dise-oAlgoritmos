@@ -1,33 +1,29 @@
 <div class="usuarios-container">
-  <div class="usuarios-header">
-    <div class="header-content">
-      <h1>User Management</h1>
-      <p>List of registered users in the system</p>
-    </div>
+  <div class="page-header">
+    <button class="back-button" (click)="volverAlDashboard()">
+      <span>←</span> Back
+    </button>
+    <h1>User Management</h1>
     <div class="header-actions">
       <app-theme-toggle></app-theme-toggle>
-      <button class="btn-registrar" (click)="abrirModal()">
-        + Register User
-      </button>
-      <button class="btn-volver" (click)="volverAlDashboard()">
-        ← Back to Dashboard
-      </button>
     </div>
   </div>
 
-  <div class="usuarios-content">
-    <!-- Loading -->
-    <div *ngIf="loading" class="loading">
-      <div class="spinner"></div>
-      <p>Loading users...</p>
+  <div class="content-card">
+    <div class="card-header">
+      <h2>User List</h2>
+      <button class="btn-primary" (click)="abrirModal()">
+        <span>+</span> New User
+      </button>
     </div>
 
     <!-- Error -->
     <div *ngIf="error && !loading" class="error-message">
-      <span class="error-icon">⚠️</span>
-      <p>{{ error }}</p>
-      <button (click)="obtenerUsuarios()">Retry</button>
+      ⚠️ {{ error }}
+      <button class="btn-secondary mt-2" (click)="obtenerUsuarios()">Retry</button>
     </div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
 
     <!-- Tabla de usuarios -->
     <div *ngIf="!loading && !error" class="usuarios-table">
@@ -138,12 +134,11 @@
         </div>
 
         <div class="modal-actions">
-          <button type="button" class="btn-cancelar" (click)="cerrarModal()">
+          <button type="button" class="btn-secondary" (click)="cerrarModal()" [disabled]="registroLoading">
             Cancel
           </button>
-          <button type="submit" class="btn-confirmar" [disabled]="registroLoading">
-            <span *ngIf="registroLoading">Registering...</span>
-            <span *ngIf="!registroLoading">Register</span>
+          <button type="submit" class="btn-primary" [disabled]="registroLoading">
+            {{ registroLoading ? 'Saving...' : 'Save' }}
           </button>
         </div>
       </form>

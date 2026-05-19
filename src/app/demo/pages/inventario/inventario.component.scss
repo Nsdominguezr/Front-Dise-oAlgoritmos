@@ -1,4 +1,4 @@
-.usuarios-container {
+.inventario-container {
   min-height: 100vh;
   background: var(--bg-base);
   padding: 20px;
@@ -104,11 +104,6 @@
   &:hover {
     border-color: var(--primary);
   }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
 }
 
 .loading {
@@ -120,39 +115,41 @@
 .error-message {
   background: rgba(233, 69, 96, 0.15);
   color: var(--danger);
-  padding: 15px;
+  padding: 10px;
   border-radius: 4px;
   margin-bottom: 15px;
   border: 1px solid var(--danger);
-  text-align: center;
 }
 
-.mt-2 {
-  margin-top: 10px;
+.success-message {
+  background: rgba(39, 174, 96, 0.15);
+  color: var(--success);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid var(--success);
 }
 
-.usuarios-table {
-  overflow-x: auto;
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
+  th,
+  td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+  }
 
-    th, td {
-      padding: 12px;
-      text-align: left;
-      color: var(--text-primary);
-      border-bottom: 1px solid var(--border);
-    }
+  th {
+    background: var(--bg-elevated);
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
 
-    th {
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
-
-    tbody tr:hover {
-      background: var(--bg-elevated);
-    }
+  tr:hover {
+    background: var(--bg-elevated);
   }
 }
 
@@ -160,6 +157,51 @@
   text-align: center;
   padding: 40px;
   color: var(--text-secondary);
+}
+
+.badge-low {
+  background: rgba(233, 69, 96, 0.2);
+  color: var(--danger);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid var(--danger);
+}
+
+.badge-ok {
+  background: rgba(39, 174, 96, 0.2);
+  color: var(--success);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid var(--success);
+}
+
+.badge-in {
+  background: rgba(39, 174, 96, 0.2);
+  color: var(--success);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid var(--success);
+}
+
+.badge-out {
+  background: rgba(255, 165, 0, 0.2);
+  color: #ffa500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid #ffa500;
+}
+
+.text-danger {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.text-success {
+  color: var(--success);
 }
 
 /* Modal */
@@ -186,6 +228,10 @@
   overflow-y: auto;
   border: 1px solid var(--border);
   transition: background 0.4s ease, border-color 0.4s ease;
+
+  &.modal-lg {
+    max-width: 800px;
+  }
 }
 
 .modal-header {
@@ -195,13 +241,13 @@
   padding: 15px 20px;
   border-bottom: 1px solid var(--border);
 
-  h2, h3 {
+  h3 {
     margin: 0;
     color: var(--text-primary);
   }
 }
 
-.modal-close {
+.close-button {
   background: none;
   border: none;
   font-size: 24px;
@@ -229,6 +275,7 @@
   }
 
   input,
+  textarea,
   select {
     width: 100%;
     padding: 10px;
@@ -259,53 +306,28 @@
   margin-top: 20px;
 }
 
-.alert {
-  padding: 10px;
+.d-flex {
+  display: flex;
+}
+
+.gap-2 {
+  gap: 10px;
+}
+
+.form-select {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
   border-radius: 4px;
-  margin-bottom: 15px;
-  text-align: center;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  cursor: pointer;
 
-  &.alert-success {
-    background: rgba(39, 174, 96, 0.15);
-    color: var(--success);
-    border: 1px solid var(--success);
-  }
-
-  &.alert-error {
-    background: rgba(233, 69, 96, 0.15);
-    color: var(--danger);
-    border: 1px solid var(--danger);
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
   }
 }
 
-.rol-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-
-  &.admin-global {
-    background: rgba(233, 69, 96, 0.2);
-    color: var(--danger);
-    border: 1px solid var(--danger);
-  }
-
-  &.admin-local {
-    background: rgba(255, 165, 0, 0.2);
-    color: #ffa500;
-    border: 1px solid #ffa500;
-  }
-
-  &.cajero {
-    background: rgba(74, 111, 212, 0.2);
-    color: var(--primary);
-    border: 1px solid var(--primary);
-  }
-
-  &.mesero {
-    background: rgba(39, 174, 96, 0.2);
-    color: var(--success);
-    border: 1px solid var(--success);
-  }
+.w-auto {
+  width: auto;
 }

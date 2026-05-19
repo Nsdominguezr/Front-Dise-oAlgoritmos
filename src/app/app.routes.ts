@@ -4,6 +4,7 @@ import { DashboardComponent } from './demo/pages/dashboard/dashboard.component';
 import { UsuariosComponent } from './demo/pages/usuarios/usuarios.component';
 import { SedesComponent } from './demo/pages/sedes/sedes.component';
 import { ProductosComponent } from './demo/pages/productos/productos.component';
+import { InventarioComponent } from './demo/pages/inventario/inventario.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -34,6 +35,11 @@ export const routes: Routes = [
   {
     path: 'productos',
     component: ProductosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'inventario',
+    component: InventarioComponent,
     canActivate: [AuthGuard]
   }
 ];
