@@ -1,0 +1,107 @@
+<div class="sedes-container">
+  <div class="page-header">
+    <button class="back-button" (click)="volverAlDashboard()">
+      <span>←</span> Back
+    </button>
+    <h1>Location Management</h1>
+    <div class="header-actions">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header">
+      <h2>Location List</h2>
+      <button class="btn-primary" (click)="abrirModal()">
+        <span>+</span> New Location
+      </button>
+    </div>
+
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+
+    <table *ngIf="!loading && sedes.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sede of sedes">
+          <td>{{ sede.id }}</td>
+          <td>{{ sede.nombre }}</td>
+          <td>{{ sede.direccion || '-' }}</td>
+          <td>{{ sede.telefono || '-' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loading && sedes.length === 0" class="empty-state">
+      No locations registered
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="mostrarModal" class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>New Location</h3>
+      <button class="close-button" (click)="cerrarModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="formError" class="error-message">{{ formError }}</div>
+      <div *ngIf="formExito" class="success-message">{{ formExito }}</div>
+
+      <form (ngSubmit)="crearSede()">
+        <div class="form-group">
+          <label for="nombre">Name *</label>
+          <input
+            type="text"
+            id="nombre"
+            [(ngModel)]="nombre"
+            name="nombre"
+            placeholder="Location name"
+            [disabled]="formLoading"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="direccion">Address</label>
+          <input
+            type="text"
+            id="direccion"
+            [(ngModel)]="direccion"
+            name="direccion"
+            placeholder="Location address"
+            [disabled]="formLoading">
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Phone</label>
+          <input
+            type="text"
+            id="telefono"
+            [(ngModel)]="telefono"
+            name="telefono"
+            placeholder="Contact phone"
+            [disabled]="formLoading">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="cerrarModal()" [disabled]="formLoading">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="formLoading">
+            {{ formLoading ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

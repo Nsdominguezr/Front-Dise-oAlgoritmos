@@ -1,15 +1,16 @@
 <div class="usuarios-container">
   <div class="usuarios-header">
     <div class="header-content">
-      <h1>Gestión de Usuarios</h1>
-      <p>Lista de usuarios registrados en el sistema</p>
+      <h1>User Management</h1>
+      <p>List of registered users in the system</p>
     </div>
     <div class="header-actions">
+      <app-theme-toggle></app-theme-toggle>
       <button class="btn-registrar" (click)="abrirModal()">
-        + Registrar Usuario
+        + Register User
       </button>
       <button class="btn-volver" (click)="volverAlDashboard()">
-        ← Volver al Dashboard
+        ← Back to Dashboard
       </button>
     </div>
   </div>
@@ -18,14 +19,14 @@
     <!-- Loading -->
     <div *ngIf="loading" class="loading">
       <div class="spinner"></div>
-      <p>Cargando usuarios...</p>
+      <p>Loading users...</p>
     </div>
 
     <!-- Error -->
     <div *ngIf="error && !loading" class="error-message">
       <span class="error-icon">⚠️</span>
       <p>{{ error }}</p>
-      <button (click)="obtenerUsuarios()">Reintentar</button>
+      <button (click)="obtenerUsuarios()">Retry</button>
     </div>
 
     <!-- Tabla de usuarios -->
@@ -34,10 +35,10 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Usuario</th>
-            <th>Rol</th>
-            <th>Sede</th>
-            <th>Creado</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Location</th>
+            <th>Created</th>
           </tr>
         </thead>
         <tbody>
@@ -56,7 +57,7 @@
       </table>
 
       <div *ngIf="usuarios.length === 0" class="empty-state">
-        <p>No hay usuarios registrados</p>
+        <p>No users registered</p>
       </div>
     </div>
   </div>
@@ -66,7 +67,7 @@
 <div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>Registrar Nuevo Usuario</h2>
+      <h2>Register New User</h2>
       <button class="modal-close" (click)="cerrarModal()">✕</button>
     </div>
 
@@ -83,38 +84,38 @@
 
       <form *ngIf="!registroExito" (ngSubmit)="registrarUsuario()">
         <div class="form-group">
-          <label for="username">Nombre de usuario</label>
+          <label for="username">Username</label>
           <input
             type="text"
             id="username"
             [(ngModel)]="registroUsername"
             name="username"
-            placeholder="Ej: admin_sede_norte"
+            placeholder="Ex: admin_north"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="password">Contraseña</label>
+          <label for="password">Password</label>
           <input
             type="password"
             id="password"
             [(ngModel)]="registroPassword"
             name="password"
-            placeholder="Mínimo 6 caracteres"
+            placeholder="Minimum 6 characters"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="rol">Rol</label>
+          <label for="rol">Role</label>
           <select
             id="rol"
             [(ngModel)]="registroRolId"
             name="rol"
             required
           >
-            <option [ngValue]="null" disabled>Seleccione un rol</option>
+            <option [ngValue]="null" disabled>Select a role</option>
             <option *ngFor="let rol of roles" [value]="rol.id">
               {{ rol.nombre }}
             </option>
@@ -122,27 +123,27 @@
         </div>
 
         <div class="form-group">
-          <label for="sede">Sede</label>
+          <label for="sede">Location</label>
           <select
             id="sede"
             [(ngModel)]="registroSedeId"
             name="sede"
             required
           >
-            <option [ngValue]="null" disabled>Seleccione una sede</option>
-            <option [value]="1">Sede Norte</option>
-            <option [value]="2">Sede Centro</option>
-            <option [value]="3">Sede Sur</option>
+            <option [ngValue]="null" disabled>Select a location</option>
+            <option [value]="1">North Location</option>
+            <option [value]="2">Central Location</option>
+            <option [value]="3">South Location</option>
           </select>
         </div>
 
         <div class="modal-actions">
           <button type="button" class="btn-cancelar" (click)="cerrarModal()">
-            Cancelar
+            Cancel
           </button>
           <button type="submit" class="btn-confirmar" [disabled]="registroLoading">
-            <span *ngIf="registroLoading">Registrando...</span>
-            <span *ngIf="!registroLoading">Registrar</span>
+            <span *ngIf="registroLoading">Registering...</span>
+            <span *ngIf="!registroLoading">Register</span>
           </button>
         </div>
       </form>

@@ -1,9 +1,14 @@
 <div class="login-container">
+    <!-- Theme toggle fuera de la tarjeta -->
+    <div class="theme-toggle-wrapper">
+        <app-theme-toggle></app-theme-toggle>
+    </div>
+
     <div class="login-content">
     <!-- Header -->
     <div class="login-header">
-    <h1>Bar Don Juancho</h1>
-    <p>¡Bienvenido! Por favor, inicia sesión o regístrate para continuar.</p>
+        <h1>Bar Don Juancho</h1>
+        <p>Welcome! Please login or register to continue.</p>
     </div>
 
     <!-- Login Solo -->
@@ -21,32 +26,32 @@
     <form (ngSubmit)="onLogin()">
         <!-- Username/Email -->
         <div class="form-group">
-        <label for="login-username">Usuario o Email</label>
+        <label for="login-username">Username</label>
         <div class="input-wrapper">
             <span class="input-icon">👤</span>
-            <input 
-            type="text" 
+            <input
+            type="text"
             id="login-username"
             [(ngModel)]="username"
             name="username"
-            placeholder="Ingresa tu usuario"
+            placeholder="Enter your username"
             [disabled]="loading">
         </div>
         </div>
 
         <!-- Password -->
         <div class="form-group">
-        <label for="login-password">Contraseña</label>
+        <label for="login-password">Password</label>
         <div class="input-wrapper">
             <span class="input-icon">🔒</span>
-            <input 
-            [type]="showPassword ? 'text' : 'password'" 
+            <input
+            [type]="showPassword ? 'text' : 'password'"
             id="login-password"
             [(ngModel)]="password"
             name="password"
-            placeholder="Ingresa tu contraseña"
+            placeholder="Enter your password"
             [disabled]="loading">
-            <button 
+            <button
             type="button"
             class="toggle-password"
             (click)="togglePasswordVisibility()"
@@ -57,11 +62,11 @@
         </div>
 
         <!-- Submit Button -->
-        <button 
-        type="submit" 
+        <button
+        type="submit"
         class="submit-button"
         [disabled]="loading">
-        {{ loading ? 'Cargando...' : 'Iniciar Sesión' }}
+        {{ loading ? 'Loading...' : 'Login' }}
         </button>
     </form>
     </div>
@@ -71,32 +76,32 @@
     <form (ngSubmit)="onRegistro()">
         <!-- Username -->
         <div class="form-group">
-        <label for="reg-username">Usuario</label>
+        <label for="reg-username">Username</label>
         <div class="input-wrapper">
             <span class="input-icon">👤</span>
-            <input 
-            type="text" 
+            <input
+            type="text"
             id="reg-username"
             [(ngModel)]="username"
             name="username"
-            placeholder="Elige un usuario único"
+            placeholder="Choose a unique username"
             [disabled]="loading">
         </div>
         </div>
 
         <!-- Password -->
         <div class="form-group">
-        <label for="reg-password">Contraseña</label>
+        <label for="reg-password">Password</label>
         <div class="input-wrapper">
             <span class="input-icon">🔒</span>
-            <input 
-            [type]="showPassword ? 'text' : 'password'" 
+            <input
+            [type]="showPassword ? 'text' : 'password'"
             id="reg-password"
             [(ngModel)]="password"
             name="password"
-            placeholder="Mínimo 6 caracteres"
+            placeholder="Minimum 6 characters"
             [disabled]="loading">
-            <button 
+            <button
             type="button"
             class="toggle-password"
             (click)="togglePasswordVisibility()"
@@ -108,7 +113,7 @@
 
         <!-- Rol -->
         <div class="form-group">
-        <label for="rol_id">Rol</label>
+        <label for="rol_id">Role</label>
         <div class="input-wrapper">
             <span class="input-icon">👨‍💼</span>
             <select
@@ -116,16 +121,16 @@
             [(ngModel)]="rol_id"
             name="rol_id"
             [disabled]="loading">
-            <option value="2">Administrador Local</option>
-            <option value="3">Cajero</option>
-            <option value="4">Mesero</option>
+            <option value="2">Local Admin</option>
+            <option value="3">Cashier</option>
+            <option value="4">Waiter</option>
             </select>
         </div>
         </div>
 
         <!-- Sede -->
         <div class="form-group">
-        <label for="sede_id">Sede</label>
+        <label for="sede_id">Location</label>
         <div class="input-wrapper">
             <span class="input-icon">🏪</span>
             <select
@@ -133,26 +138,26 @@
             [(ngModel)]="sede_id"
             name="sede_id"
             [disabled]="loading">
-            <option value="1">Sede Norte</option>
-            <option value="2">Sede Centro</option>
-            <option value="3">Sede Sur</option>
+            <option value="1">North Location</option>
+            <option value="2">Central Location</option>
+            <option value="3">South Location</option>
             </select>
         </div>
         </div>
 
         <!-- Submit Button -->
-        <button 
-        type="submit" 
+        <button
+        type="submit"
         class="submit-button"
         [disabled]="loading">
-        {{ loading ? 'Cargando...' : 'Registrarse' }}
+        {{ loading ? 'Loading...' : 'Register' }}
         </button>
     </form>
     </div>
 
     <!-- Footer -->
     <div class="login-footer">
-    <p>© 2026 Bar Don Juancho. Todos los derechos reservados.</p>
+    <p>© 2026 Bar Don Juancho. All rights reserved.</p>
     </div>
 </div>
 

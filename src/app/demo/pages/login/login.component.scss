@@ -3,24 +3,33 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #3d2817 0%, #8B4513 50%, #D2691E 100%);
+  background: var(--bg-base);
   position: relative;
   overflow: hidden;
+  transition: background 0.4s ease;
+}
+
+.theme-toggle-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
 }
 
 .login-content {
-  background: linear-gradient(135deg, #2a1810 0%, #3d2817 50%, #4a3728 100%);
+  background: var(--bg-surface);
   border-radius: 20px;
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(218, 165, 32, 0.3),
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(74, 111, 212, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   width: 100%;
   max-width: 450px;
   padding: 50px 40px;
   animation: slideUp 0.5s ease-out;
   z-index: 10;
-  border: 1px solid rgba(218, 165, 32, 0.4);
+  border: 1px solid var(--border);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 @keyframes slideUp {
@@ -40,16 +49,16 @@
 
   h1 {
     font-size: 32px;
-    color: #FFD700;
+    color: var(--text-primary);
     font-weight: 700;
     margin-bottom: 8px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     letter-spacing: 1px;
   }
 
   p {
     font-size: 14px;
-    color: #DAA520;
+    color: var(--text-secondary);
     font-weight: 400;
   }
 }
@@ -58,9 +67,10 @@
   display: flex;
   gap: 10px;
   margin-bottom: 30px;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--bg-elevated);
   padding: 8px;
   border-radius: 10px;
+  border: 1px solid var(--border);
 }
 
 .tab-button {
@@ -70,20 +80,20 @@
   background: transparent;
   font-size: 14px;
   font-weight: 600;
-  color: #DAA520;
+  color: var(--text-secondary);
   cursor: pointer;
   border-radius: 8px;
   transition: all 0.3s ease;
 
   &:hover {
-    color: #FFD700;
-    background: rgba(218, 165, 32, 0.1);
+    color: var(--text-primary);
+    background: rgba(74, 111, 212, 0.1);
   }
 
   &.active {
-    background: linear-gradient(135deg, #D2691E, #DAA520);
-    color: #1a1a1a;
-    box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    box-shadow: 0 2px 8px rgba(74, 111, 212, 0.4);
   }
 
   &:disabled {
@@ -95,8 +105,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(139, 0, 0, 0.2);
-  border: 1px solid #8B0000;
+  background: rgba(233, 69, 96, 0.15);
+  border: 1px solid var(--danger);
   border-radius: 10px;
   padding: 12px 16px;
   margin-bottom: 20px;
@@ -108,7 +118,7 @@
 
   p {
     margin: 0;
-    color: #FF6B6B;
+    color: var(--danger);
     font-size: 13px;
     font-weight: 500;
   }
@@ -147,7 +157,7 @@
   label {
     font-size: 13px;
     font-weight: 600;
-    color: #FFD700;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -170,38 +180,44 @@
   select {
     width: 100%;
     padding: 12px 15px 12px 45px;
-    border: 2px solid rgba(218, 165, 32, 0.4);
+    border: 2px solid var(--border);
     border-radius: 10px;
     font-size: 14px;
     font-family: 'Poppins', sans-serif;
-    color: #FFF;
-    background: rgba(42, 24, 16, 0.8);
+    color: var(--text-primary);
+    background: var(--bg-elevated);
     transition: all 0.3s ease;
 
     &::placeholder {
-      color: #999;
+      color: var(--text-secondary);
+      opacity: 0.6;
     }
 
     &:focus {
       outline: none;
-      border-color: #FFD700;
-      background: rgba(42, 24, 16, 1);
-      box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.2);
+      border-color: var(--primary);
+      background: var(--bg-surface);
+      box-shadow: 0 0 0 3px rgba(74, 111, 212, 0.2);
     }
 
     &:disabled {
-      background: rgba(0, 0, 0, 0.3);
-      color: #888;
+      opacity: 0.6;
       cursor: not-allowed;
     }
   }
 
   select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFD700' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238892B0' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 15px center;
     padding-right: 40px;
+    cursor: pointer;
+
+    option {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    }
   }
 
   .toggle-password {
@@ -227,8 +243,8 @@
 
 .submit-button {
   padding: 14px 20px;
-  background: linear-gradient(135deg, #D2691E 0%, #DAA520 100%);
-  color: #1a1a1a;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
   border: none;
   border-radius: 10px;
   font-size: 16px;
@@ -238,11 +254,11 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-top: 10px;
-  box-shadow: 0 8px 20px rgba(218, 165, 32, 0.3);
+  box-shadow: 0 8px 20px rgba(74, 111, 212, 0.3);
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(218, 165, 32, 0.5);
+    box-shadow: 0 12px 30px rgba(74, 111, 212, 0.5);
   }
 
   &:active:not(:disabled) {
@@ -259,11 +275,11 @@
   text-align: center;
   margin-top: 40px;
   padding-top: 20px;
-  border-top: 1px solid rgba(218, 165, 32, 0.2);
+  border-top: 1px solid var(--border);
 
   p {
     font-size: 12px;
-    color: #999;
+    color: var(--text-secondary);
     margin: 0;
   }
 }
@@ -287,7 +303,7 @@
   &.shape-1 {
     width: 300px;
     height: 300px;
-    background: #FFD700;
+    background: var(--primary);
     top: -50px;
     right: -50px;
   }
@@ -295,7 +311,7 @@
   &.shape-2 {
     width: 200px;
     height: 200px;
-    background: #DAA520;
+    background: var(--accent);
     bottom: -30px;
     left: -30px;
     animation-delay: 2s;
@@ -304,7 +320,7 @@
   &.shape-3 {
     width: 150px;
     height: 150px;
-    background: #FFD700;
+    background: var(--primary);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -350,7 +366,7 @@
   .input-wrapper {
     input,
     select {
-      font-size: 16px; // Prevents zoom on iOS
+      font-size: 16px;
     }
   }
 

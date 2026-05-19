@@ -1,1 +1,113 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Theme Variables */
+:root,
+[data-theme="dark"] {
+  /* Modo noche - Dark theme */
+  --bg-base: #0F1117;
+  --bg-surface: #171C28;
+  --bg-elevated: #1E2638;
+  --border: #2B3A5C;
+  --primary: #4A6FD4;
+  --accent: #7B96F5;
+  --text-primary: #C8D4FF;
+  --text-secondary: #8892B0;
+
+  /* Semantic colors for components */
+  --success: #27ae60;
+  --danger: #e94560;
+  --warning: #f39c12;
+  --info: #3498db;
+}
+
+[data-theme="light"] {
+  /* Modo día - Light theme */
+  --bg-base: #EDF0FA;
+  --bg-surface: #FAFBFF;
+  --bg-elevated: #FFFFFF;
+  --border: #DDE3F5;
+  --primary: #4A6FD4;
+  --accent: #7B96F5;
+  --text-primary: #1E1E5D;
+  --text-secondary: #445085;
+
+  /* Semantic colors for components */
+  --success: #27ae60;
+  --danger: #e94560;
+  --warning: #f39c12;
+  --info: #3498db;
+}
+
+/* Toggle-specific variables */
+[data-theme="dark"] {
+  --toggle-border: #2B3A5C;
+  --toggle-thumb-bg: #7B96F5;
+}
+
+[data-theme="light"] {
+  --toggle-border: #DDE3F5;
+  --toggle-thumb-bg: #FFD700;
+}
+
+/* Global reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  transition: background-color 0.4s ease, color 0.4s ease;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Utility classes */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.bg-base {
+  background-color: var(--bg-base);
+}
+
+.bg-surface {
+  background-color: var(--bg-surface);
+}
+
+.bg-elevated {
+  background-color: var(--bg-elevated);
+}

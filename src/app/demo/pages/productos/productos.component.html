@@ -1,0 +1,116 @@
+<div class="productos-container">
+  <div class="page-header">
+    <button class="back-button" (click)="volverAlDashboard()">
+      <span>←</span> Back
+    </button>
+    <h1>Product Management</h1>
+    <div class="header-actions">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header">
+      <h2>Product List</h2>
+      <button class="btn-primary" (click)="abrirModal()">
+        <span>+</span> New Product
+      </button>
+    </div>
+
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+
+    <table *ngIf="!loading && productos.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos">
+          <td>{{ producto.id }}</td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ formatPrecio(producto.precio) }}</td>
+          <td>{{ producto.categoria || '-' }}</td>
+          <td>
+            <span [class]="producto.activo ? 'badge-active' : 'badge-inactive'">
+              {{ producto.activo ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loading && productos.length === 0" class="empty-state">
+      No products registered
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="mostrarModal" class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>New Product</h3>
+      <button class="close-button" (click)="cerrarModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="formError" class="error-message">{{ formError }}</div>
+      <div *ngIf="formExito" class="success-message">{{ formExito }}</div>
+
+      <form (ngSubmit)="crearProducto()">
+        <div class="form-group">
+          <label for="nombre">Name *</label>
+          <input
+            type="text"
+            id="nombre"
+            [(ngModel)]="nombre"
+            name="nombre"
+            placeholder="Product name"
+            [disabled]="formLoading"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="precio">Price *</label>
+          <input
+            type="number"
+            id="precio"
+            [(ngModel)]="precio"
+            name="precio"
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            [disabled]="formLoading"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="categoria">Category</label>
+          <input
+            type="text"
+            id="categoria"
+            [(ngModel)]="categoria"
+            name="categoria"
+            placeholder="Ex: Drinks, Food, Desserts"
+            [disabled]="formLoading">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="cerrarModal()" [disabled]="formLoading">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="formLoading">
+            {{ formLoading ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

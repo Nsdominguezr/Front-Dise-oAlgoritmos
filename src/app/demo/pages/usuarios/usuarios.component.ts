@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { ThemeToggleComponent } from '../../../shared/components/theme-toggle/theme-toggle.component';
 
 interface Usuario {
   id: number;
@@ -23,7 +24,7 @@ interface RolOpcion {
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ThemeToggleComponent],
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.scss']
 })
@@ -32,13 +33,11 @@ export class UsuariosComponent implements OnInit {
   loading = false;
   error = '';
 
-  // Modal de registro
   mostrarModal = false;
   registroLoading = false;
   registroError = '';
   registroExito = '';
 
-  // Campos del formulario
   registroUsername = '';
   registroPassword = '';
   registroRolId: number | null = null;
@@ -82,7 +81,6 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
-  // --- Modal de registro ---
   abrirModal(): void {
     this.mostrarModal = true;
     this.registroError = '';

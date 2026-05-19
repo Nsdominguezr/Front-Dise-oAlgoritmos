@@ -1,49 +1,57 @@
 <div class="dashboard-container">
-<div class="dashboard-header">
+    <div class="dashboard-header">
     <div class="header-content">
     <h1>Bar Don Juancho - Dashboard</h1>
-      <p *ngIf="usuario">Bienvenido, <strong>{{ usuario.username }}</strong></p>
+      <p *ngIf="usuario">Welcome, <strong>{{ usuario.username }}</strong></p>
     </div>
-    <button class="logout-button" (click)="logout()">
-    <span>🚪</span> Cerrar Sesión
-    </button>
+    <div class="header-actions">
+        <app-theme-toggle></app-theme-toggle>
+        <button class="logout-button" (click)="logout()">
+        <span>🚪</span> Logout
+        </button>
+    </div>
 </div>
 
 <div class="dashboard-content">
     <div class="welcome-section">
-        <h2>Panel Principal</h2>
-        <p>Acciones disponibles:</p>
+        <h2>Main Panel</h2>
+        <p>Available actions:</p>
     </div>
 
     <div class="buttons-grid">
-    <button class="action-button">
+    <button class="action-button" routerLink="/productos">
         <span class="button-icon">📦</span>
-        <span class="button-text">Gestionar Productos</span>
+        <span class="button-text">Manage Products</span>
     </button>
 
     <button class="action-button">
         <span class="button-icon">📋</span>
-        <span class="button-text">Gestionar Pedidos</span>
+        <span class="button-text">Manage Orders</span>
     </button>
 
     <button class="action-button">
         <span class="button-icon">📊</span>
-        <span class="button-text">Reportes</span>
+        <span class="button-text">Reports</span>
     </button>
 
     <button class="action-button" routerLink="/usuarios">
         <span class="button-icon">👥</span>
-        <span class="button-text">Gestionar Usuarios</span>
+        <span class="button-text">Manage Users</span>
+    </button>
+
+    <button class="action-button" routerLink="/sedes">
+        <span class="button-icon">🏪</span>
+        <span class="button-text">Manage Locations</span>
     </button>
 
     <button class="action-button">
         <span class="button-icon">⚙️</span>
-        <span class="button-text">Configuración</span>
+        <span class="button-text">Settings</span>
     </button>
 
     <button class="action-button">
         <span class="button-icon">❓</span>
-        <span class="button-text">Ayuda</span>
+        <span class="button-text">Help</span>
     </button>
     </div>
 </div>
