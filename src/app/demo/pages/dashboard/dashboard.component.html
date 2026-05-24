@@ -2,7 +2,7 @@
     <div class="dashboard-header">
     <div class="header-content">
     <h1>Bar Don Juancho - Home</h1>
-      <p *ngIf="usuario">Welcome, <strong>{{ usuario.username }}</strong></p>
+      <p *ngIf="usuario">Welcome, <strong>{{ usuario.username }}</strong> - <span class="rol-badge">{{ rol }}</span></p>
     </div>
     <div class="header-actions">
         <app-theme-toggle></app-theme-toggle>
@@ -15,48 +15,18 @@
 <div class="dashboard-content">
     <div class="welcome-section">
         <h2>Main Panel</h2>
-        <p>Available actions:</p>
+        <p>Available actions for your role:</p>
     </div>
 
     <div class="buttons-grid">
-    <button class="action-button" routerLink="/productos">
-        <span class="button-icon">📦</span>
-        <span class="button-text">Manage Products</span>
-    </button>
-
-    <button class="action-button">
-        <span class="button-icon">📋</span>
-        <span class="button-text">Manage Orders</span>
-    </button>
-
-    <button class="action-button">
-        <span class="button-icon">📊</span>
-        <span class="button-text">Reports</span>
-    </button>
-
-    <button class="action-button" routerLink="/usuarios">
-        <span class="button-icon">👥</span>
-        <span class="button-text">Manage Users</span>
-    </button>
-
-    <button class="action-button" routerLink="/inventario">
-        <span class="button-icon">📦</span>
-        <span class="button-text">Manage Inventory</span>
-    </button>
-
-    <button class="action-button" routerLink="/sedes">
-        <span class="button-icon">🏪</span>
-        <span class="button-text">Manage Locations</span>
-    </button>
-
-    <button class="action-button">
-        <span class="button-icon">⚙️</span>
-        <span class="button-text">Settings</span>
-    </button>
-
-    <button class="action-button">
-        <span class="button-icon">❓</span>
-        <span class="button-text">Help</span>
+    <button
+        *ngFor="let item of filteredMenuItems"
+        class="action-button"
+        [class.disabled]="item.disabled"
+        [routerLink]="item.disabled ? null : item.path">
+        <span class="button-icon">{{ item.icon }}</span>
+        <span class="button-text">{{ item.label }}</span>
+        <span *ngIf="item.disabled" class="badge-soon">Soon</span>
     </button>
     </div>
 </div>

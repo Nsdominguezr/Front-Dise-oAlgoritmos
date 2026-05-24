@@ -1,614 +1,404 @@
 # Bar Don Juancho - Frontend
 
-Sistema de gestión táctil multi-sede para bares y restaurantes. Interfaz frontend desarrollada en Angular 19 para operación en pantallas táctiles.
+**Sistema de gestión táctil multi-sede *
 
-![Angular](https://img.shields.io/badge/Angular-19.0.6-red?style=flat-square&logo=angular)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.6.2-blue?style=flat-square&logo=typescript)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-purple?style=flat-square&logo=bootstrap)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ---
 
 ## Tabla de Contenidos
 
-1. [Visión General](#visión-general)
-2. [Tecnologías](#tecnologías)
-3. [Estructura del Proyecto](#estructura-del-proyecto)
-4. [Sistema de Diseño](#sistema-de-diseño)
-5. [Funcionalidades por Épica](#funcionalidades-por-épica)
-6. [Arquitectura de Páginas](#arquitectura-de-páginas)
-7. [Sistema de Roles](#sistema-de-roles)
-8. [Arquitectura de API](#arquitectura-de-api)
-9. [Requisitos Previos](#requisitos-previos)
-10. [Desarrollo Local](#desarrollo-local)
-11. [Flujo de Autenticación](#flujo-de-autenticación)
-12. [Estructuras de Datos](#estructuras-de-datos)
+1. [¿Qué es esto?](#¿qué-es-esto)
+2. [¿Qué necesito para запустить?](#¿qué-necesito-para-ejecutar)
+3. [Instalación en 5 pasos](#instalación-en-5-pasos)
+4. [¿Cómo funciona el sistema?](#¿cómo-funciona-el-sistema)
+5. [Estructura del proyecto (Explicado)](#estructura-del-proyecto-explicado)
+6. [Páginas existentes](#páginas-existentes)
+7. [Sistema de Roles (¿Quién ve qué?)](#sistema-de-roles-quién-ve-qué)
+8. [Colores y Temas](#colores-y-temas)
+9. [Comandos útiles](#comandos-útiles)
+10. [Problemas comunes](#problemas-comunes)
 
 ---
 
-## Visión General
+## ¿Qué es esto?
 
-**Bar Don Juancho** es un sistema de gestión integral para bares y restaurantes con las siguientes características:
+**Bar Don Juancho** es una aplicación web que ayuda a gestionar un bar con varias sedes. Permite:
 
-- **Multi-sede**: Gestión simultánea de varias sedes (Norte, Centro, Sur)
-- **Táctil**: Interfaz optimizada para pantallas táctiles
-- **Multi-rol**: Sistema de permisos basado en roles (Admin Global, Admin Local, Cajero, Mesero)
-- **Seguro**: Autenticación mediante JWT con vencimiento de 8 horas
-- **Responsive**: Diseño adaptable a diferentes tamaños de pantalla
-- **Tema Oscuro/Luz**: Soporte nativo para cambio de tema día/noche
+- **Administrar usuarios** (¿Quién es mesero? ¿Quién es cajero?)
+- **Administrar sedes** (Bar Norte, Bar Centro, Bar Sur)
+- **Administrar productos** (¿Qué vendemos? Precios, categorías)
+- **Administrar inventario** (¿Cuántas cajas de cerveza tenemos?)
+- **Tomar pedidos** (El mesero toma la orden en una mesa)
+- **Cobrar** (El cajero cobra la cuenta)
 
----
-
-## Tecnologías
-
-| Tecnología | Versión | Propósito |
-|------------|---------|-----------|
-| Angular | 19.0.6 | Framework principal |
-| TypeScript | 5.6.2 | Lenguaje tipado |
-| Bootstrap | 5.3.0 | Framework CSS base |
-| SCSS | - | Estilos personalizados |
-| RxJS | 7.8.0 | Programación reactiva |
+### Características principales:
+- 🌙 Modo oscuro y modo claro
+- 📱 Diseñado para pantallas táctiles
+- 🔐 Seguro con tokens (JWT)
+- 👥 Diferentes tipos de usuarios con diferentes permisos
 
 ---
 
-## Estructura del Proyecto
+## ¿Qué necesito para ejecutar?
+
+### Software obligatorio:
+
+| Programa | ¿Para qué? | ¿Dónde bajarlo? |
+|----------|------------|------------------|
+| **Node.js 18+** | Ejecuta el código de Angular | [nodejs.org](https://nodejs.org/) |
+| **npm 9+** | Instala las dependencias (viene con Node) | ya viene con Node |
+| **Backend funcionando** | Sin esto, la app no funciona | (ver sección siguiente) |
+
+### El Backend debe estar corriendo en estos puertos:
 
 ```
-Front-Dise-oAlgoritmos/
-├── src/
-│   ├── app/
-│   │   ├── app.component.ts          # Componente raíz
-│   │   ├── app.component.html        # Template raíz
-│   │   ├── app.config.ts            # Configuración de providers
-│   │   ├── app.routes.ts            # Definición de rutas
-│   │   │
-│   │   ├── demo/
-│   │   │   └── pages/
-│   │   │       ├── login/           # Página de login
-│   │   │       ├── dashboard/       # Panel principal (Home)
-│   │   │       ├── usuarios/        # Gestión de usuarios
-│   │   │       ├── sedes/           # Gestión de sedes
-│   │   │       ├── productos/       # Gestión de productos
-│   │   │       └── inventario/      # Gestión de inventario
-│   │   │
-│   │   ├── guards/
-│   │   │   └── auth.guard.ts        # Protección de rutas
-│   │   │
-│   │   ├── interceptors/
-│   │   │   └── auth.interceptor.ts  # Inyección automática de JWT
-│   │   │
-│   │   ├── services/
-│   │   │   ├── auth.service.ts      # Servicio de autenticación
-│   │   │   ├── sede.service.ts      # Servicio de sedes
-│   │   │   ├── producto.service.ts  # Servicio de productos
-│   │   │   ├── inventario.service.ts # Servicio de inventario
-│   │   │   └── theme.service.ts    # Servicio de tema (oscuro/luz)
-│   │   │
-│   │   └── shared/
-│   │       └── components/
-│   │           └── theme-toggle/    # Botón selector de tema
-│   │
-│   ├── assets/
-│   ├── index.html
-│   ├── main.ts
-│   └── styles.css                   # Variables globales de tema
-│
-├── dist/                            # Archivos compilados
-├── node_modules/
-├── angular.json
-├── package.json
-├── package-lock.json
-├── tsconfig.json
-└── README.md
+Puerto 8000 - API Gateway (el que recibe todas las peticiones)
+Puerto 5001 - Auth Service (login, usuarios)
+Puerto 5002 - Catalog Service (sedes, productos)
+Puerto 5003 - Inventory Service (inventario)
+Puerto 5004 - Orders Service (pedidos, caja)
 ```
 
+> 💡 **¿No sabes qué es el backend?** Es el programa que está "detrás" guardando datos en una base de datos. Sin él, esta aplicación no puede hacer nada.
+
 ---
 
-## Sistema de Diseño
+## Instalación en 5 pasos
 
-### Paleta de Colores
+### Paso 1: Instalar Node.js
+Descarga Node.js 18+ desde [nodejs.org](https://nodejs.org/). Durante la instalación, npm también se instala automáticamente.
 
-El sistema utiliza variables CSS que cambian según el tema activo (oscuro/luz).
-
-#### Modo Noche (Dark)
-
-| Variable | Hex | Uso |
-|----------|-----|-----|
-| `--bg-base` | `#0F1117` | Fondo principal |
-| `--bg-surface` | `#171C28` | Cards y contenedores |
-| `--bg-elevated` | `#1E2638` | Elementos elevados |
-| `--border` | `#2B3A5C` | Bordes y divisores |
-| `--primary` | `#4A6FD4` | Botones primarios |
-| `--accent` | `#7B96F5` | Acentos y hover |
-| `--text-primary` | `#C8D4FF` | Texto principal |
-| `--text-secondary` | `#8892B0` | Texto secundario |
-
-#### Modo Día (Light)
-
-| Variable | Hex | Uso |
-|----------|-----|-----|
-| `--bg-base` | `#EDF0FA` | Fondo principal |
-| `--bg-surface` | `#FAFBFF` | Cards y contenedores |
-| `--bg-elevated` | `#FFFFFF` | Elementos elevados |
-| `--border` | `#DDE3F5` | Bordes y divisores |
-| `--primary` | `#4A6FD4` | Botones primarios |
-| `--accent` | `#7B96F5` | Acentos y hover |
-| `--text-primary` | `#1E1E5D` | Texto principal |
-| `--text-secondary` | `#445085` | Texto secundario |
-
-> **Nota**: `--primary` y `--accent` son idénticos en ambos temas para mantener consistencia visual.
-
-### Sistema de Componentes
-
-Todos los componentes de gestión comparten la misma estructura visual:
-
-#### Header de Página
-```html
-<div class="page-header">
-  <button class="back-button" (click)="volverAlDashboard()">
-    <span>←</span> Back
-  </button>
-  <h1>Título de la Página</h1>
-  <div class="header-actions">
-    <app-theme-toggle></app-theme-toggle>
-  </div>
-</div>
+**Para verificar que se instaló correctamente:**
+```bash
+node --version
+npm --version
 ```
 
-#### Card de Contenido
-```html
-<div class="content-card">
-  <div class="card-header">
-    <h2>Subtítulo</h2>
-    <button class="btn-primary">+ Nueva Acción</button>
-  </div>
-  <!-- Contenido: tabla, lista, etc -->
-</div>
+Deberías ver algo como `v18.x.x` y `9.x.x`.
+
+### Paso 2: Entrar a la carpeta del proyecto
+```bash
+cd /home/user/Documentos/Diseño\ de\ algoritmos/Front/Front-Dise-oAlgoritmos
 ```
 
-#### Modal Estándar
-```html
-<div class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>Título del Modal</h3>
-      <button class="close-button">×</button>
-    </div>
-    <div class="modal-body">
-      <!-- Formularios -->
-    </div>
-    <div class="modal-actions">
-      <button class="btn-secondary">Cancel</button>
-      <button class="btn-primary">Save</button>
-    </div>
-  </div>
-</div>
-```
-
-### Clases de Estilos Comunes
-
-| Clase | Descripción |
-|-------|-------------|
-| `.page-header` | Header con botón back, título y acciones |
-| `.back-button` | Botón para volver al dashboard (← Back) |
-| `.content-card` | Contenedor principal de contenido |
-| `.card-header` | Header dentro de card con título y acciones |
-| `.btn-primary` | Botón principal (fondo primary, texto blanco) |
-| `.btn-secondary` | Botón secundario (borde, fondo elevado) |
-| `.data-table` | Tabla de datos con estilos de tema |
-| `.modal-overlay` | Overlay semitransparente para modales |
-| `.modal-content` | Contenedor del modal |
-| `.error-message` | Mensaje de error con borde rojo |
-| `.success-message` | Mensaje de éxito con borde verde |
-| `.empty-state` | Estado cuando no hay datos |
-
----
-
-## Funcionalidades por Épica
-
-### ÉPICA 1: Arquitectura Base y Seguridad (Sprint 1)
-
-| HU | Descripción | Estado |
-|----|-------------|--------|
-| HU-001 | Setup del Frontend en Angular con Bootstrap | ✅ Completo |
-| HU-002 | API Gateway y Enrutamiento Estático | ✅ Completo (Backend) |
-| HU-003 | Arquitectura de Datos Descentralizada | ✅ Completo (Backend) |
-| HU-004 | Encriptación y Seguridad Base | ✅ Completo (Backend) |
-
-### ÉPICA 2: Autenticación y Servicio de Identidad (Sprint 2)
-
-| HU | Descripción | Estado |
-|----|-------------|--------|
-| HU-005 | Modelo Estricto de Roles | ✅ Completo (Backend) |
-| HU-006 | Registro de Administradores | ✅ Completo |
-| HU-007 | Login con Pruebas Unitarias | ✅ Completo (Backend) |
-| HU-008 | Cierre Automático de Sesión (5 min) | ✅ Completo |
-
-### ÉPICA 3: Administración y Catálogo Global (Sprint 3)
-
-| HU | Descripción | Estado |
-|----|-------------|--------|
-| HU-009 | CRUD de Sedes Físicas | ✅ Completo |
-| HU-010 | Control de Acceso por Sede | ✅ Completo |
-| HU-011 | Maestra de Productos Centralizada | ✅ Completo (Backend) |
-| HU-012 | UI de Catálogo de Productos | ✅ Completo |
-
-### ÉPICA 4: Microservicio de Inventario (Sprint 4)
-
-| HU | Descripción | Estado |
-|----|-------------|--------|
-| HU-013 | Restricción de Unidades Enteras | ✅ Completo (Backend) |
-| HU-014 | Asignación Inicial de Stock | ✅ Completo |
-| HU-015 | Vista de Inventario por Sede | ✅ Completo |
-| HU-016 | Ingreso Manual de Stock | ✅ Completo |
-| HU-017 | Salida Manual de Stock (Mermas) | ✅ Completo |
-| HU-018 | Historial Básico de Movimientos | ✅ Completo |
-
----
-
-## Arquitectura de Páginas
-
-### Página: Login (`/login`)
-
-**Archivo:** `src/app/demo/pages/login/`
-
-**Funcionalidad:**
-- Formulario de login con username y password
-- Almacenamiento de JWT en localStorage
-- Redirección a `/dashboard` tras login exitoso
-- Auto-logout tras 5 minutos de inactividad
-
-**Componentes:**
-- `login.component.ts` - Lógica del componente
-- `login.service.ts` - Servicio de autenticación
-- `login-rs.ts`, `respuesta-rs.ts` - Modelos de respuesta
-
----
-
-### Página: Home (`/dashboard`)
-
-**Archivo:** `src/app/demo/pages/dashboard/`
-
-**Funcionalidad:**
-- Panel principal con botones de navegación
-- Muestra nombre de usuario y rol
-- Botón de logout
-- Toggle de tema (oscuro/luz)
-- Círculos decorativos animados con tema
-
-**Rutas accesibles desde Home:**
-- `/productos` - Gestión de productos
-- `/usuarios` - Gestión de usuarios
-- `/sedes` - Gestión de sedes
-- `/inventario` - Gestión de inventario
-
----
-
-### Página: Usuarios (`/usuarios`)
-
-**Archivo:** `src/app/demo/pages/usuarios/`
-
-**Funcionalidad:**
-- Lista todos los usuarios del sistema
-- Modal para registrar nuevo usuario
-- Badges de colores según rol
-- Botón "← Back" para volver al home
-
-**Modelo de datos:**
-```typescript
-interface Usuario {
-  id: number;
-  username: string;
-  rol: { id: number; nombre: string };
-  sede_id: number;
-  creado_en: string;
-}
-```
-
----
-
-### Página: Sedes (`/sedes`)
-
-**Archivo:** `src/app/demo/pages/sedes/`
-
-**Funcionalidad:**
-- Lista todas las sedes
-- Modal para crear nueva sede (nombre, dirección, teléfono)
-- Botón "← Back" para volver al home
-
-**Modelo de datos:**
-```typescript
-interface Sede {
-  id: number;
-  nombre: string;
-  direccion: string;
-  telefono: string;
-}
-```
-
----
-
-### Página: Productos (`/productos`)
-
-**Archivo:** `src/app/demo/pages/productos/`
-
-**Funcionalidad:**
-- Lista todos los productos activos
-- Modal para crear nuevo producto (nombre, precio, categoría)
-- Badges de estado (Active/Inactive)
-- Formateo de precios
-
-**Modelo de datos:**
-```typescript
-interface Producto {
-  id: number;
-  nombre: string;
-  precio: number;
-  categoria: string;
-  activo: boolean;
-}
-```
-
----
-
-### Página: Inventario (`/inventario`)
-
-**Archivo:** `src/app/demo/pages/inventario/`
-
-**Funcionalidad:**
-- Selector de sede para filtrar inventario
-- Tabla de stock con indicadores de stock bajo (< 5)
-- **Modal de Ingreso**: Registrar entrada de mercancía
-  - Selecciona producto
-  - Ingresa cantidad (enteros positivos)
-  - Observación opcional
-- **Modal de Merma**: Registrar salida de mercancía
-  - Selecciona producto (muestra stock actual)
-  - Ingresa cantidad
-  - Observación opcional
-- **Modal de Historial**: Ver movimientos registrados
-  - Fecha, tipo (In/Out), cantidad, observación
-
-**Endpoints utilizados:**
-- `GET /api/inventario/sede/<sede_id>` - Obtener stock
-- `POST /api/inventario/movimiento` - Registrar movimiento
-
-**Modelo de datos:**
-```typescript
-interface Inventario {
-  id: number;
-  sede_id: number;
-  producto_id: number;
-  cantidad: number;
-  movimientos?: MovimientoInventario[];
-}
-
-interface MovimientoInventario {
-  id: number;
-  tipo_movimiento: 'INGRESO' | 'MERMA';
-  cantidad: number;
-  fecha: string;
-  observacion: string;
-}
-
-interface MovimientoRequest {
-  sede_id: number;
-  producto_id: number;
-  tipo_movimiento: 'INGRESO' | 'MERMA';
-  cantidad: number;
-  observacion?: string;
-}
-```
-
----
-
-## Sistema de Roles
-
-| ID | Rol | Descripción | Permisos |
-|----|-----|-------------|----------|
-| 1 | Admin Global | Acceso total al sistema | Gestión de todas las sedes, usuarios y productos |
-| 2 | Admin Local | Administrador de sede específica | Gestión de usuarios de su sede, inventario |
-| 3 | Cajero | Gestión de caja y cobros | Registro de pedidos y cobros |
-| 4 | Mesero | Toma de pedidos en mesas | Registro de pedidos |
-
----
-
-## Arquitectura de API
-
-### API Gateway (Puerto 8000)
-
-Todas las peticiones del frontend pasan por el API Gateway que las redirige a los microservicios correspondientes.
-
-```
-[Angular] → [API Gateway :8000] → [Microservicios]
-```
-
-### Endpoints
-
-| Ruta | Microservicio | Puerto | Métodos |
-|------|---------------|--------|---------|
-| `/api/auth/*` | service_master | 5001 | POST login, registro, refresh, GET usuarios |
-| `/api/sedes/*` | catalog_service | 5002 | GET, POST sedes |
-| `/api/productos/*` | catalog_service | 5002 | GET, POST productos |
-| `/api/inventario/*` | inventory_service | 5003 | GET stock, POST movimientos |
-
-### Microservicios
-
-| Servicio | Puerto | Base de Datos | Propósito |
-|----------|--------|---------------|-----------|
-| service_master | 5001 | bar_identity_db | Autenticación y usuarios |
-| catalog_service | 5002 | bar_catalog_db | Sedes y productos |
-| inventory_service | 5003 | bar_inventory_db | Inventario y movimientos |
-
----
-
-## Requisitos Previos
-
-### Software necesario
-
-| Software | Versión mínima | Propósito |
-|----------|----------------|-----------|
-| Node.js | 18.x | Entorno de ejecución |
-| npm | 9.x | Gestor de paquetes |
-| Angular CLI | 19.0.x | CLI de Angular |
-
-### Backend requerido
-
-Para que el frontend funcione, estos servicios deben estar activos:
-
-1. **API Gateway** - Puerto 8000 (punto de entrada)
-2. **Service Master** - Puerto 5001 (autenticación)
-3. **Catalog Service** - Puerto 5002 (sedes, productos)
-4. **Inventory Service** - Puerto 5003 (inventario)
-
----
-
-## Desarrollo Local
-
-### 1. Instalación de dependencias
-
+### Paso 3: Instalar dependencias
 ```bash
 npm install
 ```
 
-### 2. Levantar el servidor de desarrollo
+> ⏳ Esto puede tardar 2-5 minutos. No te preocupes si parece lento.
 
+### Paso 4: Asegurarte que el backend esté corriendo
+Abre terminal y ejecuta (en las carpetas correctas del backend):
+```bash
+# Terminal 1
+cd /home/user/Documentos/Diseño\ de\ algoritmos/back/api_gateway
+python app.py
+
+# Terminal 2
+cd /home/user/Documentos/Diseño\ de\ algoritmos/back/service_master
+python app.py
+
+# Terminal 3
+cd /home/user/Documentos/Diseño\ de\ algoritmos/back/catalog_service
+python app.py
+
+# Terminal 4
+cd /home/user/Documentos/Diseño\ de\ algoritmos/back/inventory_service
+python app.py
+
+# Terminal 5
+cd /home/user/Documentos/Diseño\ de\ algoritmos/back/orders_service
+python app.py
+```
+
+### Paso 5: Levantar el frontend
 ```bash
 ng serve
 ```
 
-Acceso: `http://localhost:4200/`
+Ahora abre tu navegador y ve a: **`http://localhost:4200`**
 
-### 3. Levantar el Backend
+---
+
+## ¿Cómo funciona el sistema?
+
+### El flujo básico de una acción:
+
+```
+[USUARIO] → [FRONTEND (Angular)] → [API GATEWAY (Puerto 8000)] → [BACKEND (Python)]
+                                       ↓
+                               ¿A dónde va la petición?
+                               - /api/auth/* → Auth Service (5001)
+                               - /api/sedes/* → Catalog Service (5002)
+                               - /api/productos/* → Catalog Service (5002)
+                               - /api/inventario/* → Inventory Service (5003)
+                               - /api/pedidos/* → Orders Service (5004)
+```
+
+### Ejemplo: Usuario quiere ver el inventario
+
+1. **Usuario** hace clic en "Manage Inventory"
+2. **Frontend** pregunta: ¿Estás logueado? (AuthGuard)
+3. **Si está logueado**, el frontend pide los datos al API Gateway
+4. **API Gateway** redirige la petición a Inventory Service (puerto 5003)
+5. **Inventory Service** consulta la base de datos
+6. **La respuesta** regresa por el mismo camino hasta el frontend
+7. **Frontend** muestra los datos en pantalla
+
+---
+
+## Estructura del Proyecto (Explicado)
+
+```
+Front-Dise-oAlgoritmos/
+├── src/                          # Todo el código fuente está aquí
+│   ├── app/                      # La aplicación principal
+│   │   ├── demo/                 # Carpeta con las páginas
+│   │   │   └── pages/
+│   │   │       ├── login/        # Página de login
+│   │   │       ├── dashboard/     # Página principal (home)
+│   │   │       ├── usuarios/      # Gestión de usuarios
+│   │   │       ├── sedes/        # Gestión de sedes
+│   │   │       ├── productos/    # Gestión de productos
+│   │   │       ├── inventario/  # Gestión de inventario
+│   │   │       ├── pedido/       # Tomar pedidos (meseros)
+│   │   │       └── caja/         # Cobrar pedidos (cajeros)
+│   │   ├── services/             # Conexiones al backend
+│   │   │   ├── auth.service.ts    # Login, logout
+│   │   │   ├── producto.service.ts # Productos
+│   │   │   ├── inventario.service.ts # Inventario
+│   │   │   └── sede.service.ts   # Sedes
+│   │   ├── guards/               # Protectores de rutas
+│   │   │   ├── auth.guard.ts     # ¿Estás logueado?
+│   │   │   └── role.guard.ts     # ¿Tienes permiso?
+│   │   └── interceptors/         # Automatizaciones
+│   │       └── auth.interceptor.ts # Agrega el token a cada petición
+│   ├── styles.css                # Colores del tema (oscuro/claro)
+│   └── index.html                # Punto de entrada HTML
+├── dist/                         # Archivos compilados (para producción)
+└── node_modules/                 # Dependencias instaladas (NO TOCAR)
+```
+
+### Explicación rápida de cada carpeta:
+
+| Carpeta | ¿Qué hace? |
+|---------|------------|
+| `pages/` | Cada página de la aplicación (login, dashboard, etc) |
+| `services/` | Conexiones al backend. Piden datos, guardan datos |
+| `guards/` | Revisan si puedes entrar a una página o no |
+| `interceptors/` | Automatizaciones que pasan en cada petición HTTP |
+
+---
+
+## Páginas Existentes
+
+| Ruta | Página | ¿Quién puede verla? |
+|------|--------|---------------------|
+| `/login` | Login | Todos (público) |
+| `/dashboard` | Home | Todos los logueados |
+| `/usuarios` | Gestión de usuarios | Admin Global |
+| `/sedes` | Gestión de sedes | Admin Global |
+| `/productos` | Gestión de productos | Admin Global |
+| `/inventario` | Gestión de inventario | Admin Global, Admin Local |
+| `/pedido` | Tomar pedidos | Admin Global, Mesero |
+| `/caja` | Cobrar pedidos | Admin Global, Cajero |
+
+---
+
+## Sistema de Roles (¿Quién ve qué?)
+
+Hay 4 tipos de usuarios en el sistema:
+
+### 1. Admin Global 🏢
+**El jefe máximo.** Puede ver y hacer TODO.
+
+| Puede ver | Puede hacer |
+|-----------|-------------|
+| Todas las sedes | Crear/editar/borrar todo |
+| Todos los usuarios | Registrar nuevos usuarios |
+| Todos los productos | Gestionar el catálogo completo |
+| Inventario de todas las sedes | Ingresar y sacar stock |
+| Pedidos de todas las sedes | Ver y cobrar cualquier pedido |
+| **Reports (proximamente)** | Ver estadísticas |
+
+### 2. Admin Local 🏪
+**El administrador de UNA sede.**
+
+| Puede ver | Puede hacer |
+|-----------|-------------|
+| Solo su sede | Gestionar inventario de su sede |
+| Solo su inventario | Registrar ingresos y mermas |
+| No ve otras sedes | Ver historial de movimientos |
+
+### 3. Mesero 🍽️
+**El que toma las orders.**
+
+| Puede ver | Puede hacer |
+|-----------|-------------|
+| Su sede | Abrir pedidos en mesas |
+| Opción de pedidos | Agregar productos a la orden |
+| No ve inventario (directamente) | Enviar pedido a caja |
+
+### 4. Cajero 💰
+**El que cobra.**
+
+| Puede ver | Puede hacer |
+|-----------|-------------|
+| Solo opción de caja | Ver pedidos pendientes |
+| Pedidos de su sede | Cobrar un pedido |
+| No ve inventario | Elegir medio de pago |
+
+---
+
+## Colores y Temas
+
+La aplicación tiene dos temas: **Oscuro** (para la noche) y **Claro** (para el día).
+
+### Tema Oscuro (Modo Noche) 🌙
+
+| Elemento | Color | Hex |
+|----------|-------|-----|
+| Fondo principal | Negro azulado | `#0F1117` |
+| Cards/ventanas | Gris oscuro azulado | `#171C28` |
+| Elementos elevados | Gris azulado | `#1E2638` |
+| Bordes | Gris azulado claro | `#2B3A5C` |
+| Botones primarios | Azul | `#4A6FD4` |
+| Texto principal | Azul claro | `#C8D4FF` |
+| Error/Peligro | Rojo | `#e94560` |
+| Éxito | Verde | `#27ae60` |
+
+### Tema Claro (Modo Día) ☀️
+
+| Elemento | Color | Hex |
+|----------|-------|-----|
+| Fondo principal | Gris azulado clarito | `#EDF0FA` |
+| Cards/ventanas | Blanco | `#FAFBFF` |
+| Elementos elevados | Blanco puro | `#FFFFFF` |
+| Bordes | Gris clarito | `#DDE3F5` |
+| Botones primarios | Azul | `#4A6FD4` |
+| Texto principal | Azul oscuro | `#1E1E5D` |
+
+> 💡 **Nota:** Los colores de los botones (`primary` y `accent`) son IGUALES en ambos temas. Así el sistema se siente consistente.
+
+### ¿Cómo cambio el tema?
+
+Hay un botón en la esquina superior derecha de cada página (🌙/☀️). Al hacer clic, cambia instantáneamente.
+
+---
+
+## Comandos útiles
+
+### Para desarrollar (durante el trabajo)
 
 ```bash
-# Terminal 1: API Gateway
-cd ../back/api_gateway && python app.py
+# Instalar todo lo necesario (solo una vez al inicio)
+npm install
 
-# Terminal 2: Service Master
-cd ../back/service_master && python app.py
+# Levantar el servidor de desarrollo
+# Se actualiza SOLO cuando guardas un archivo
+ng serve
 
-# Terminal 3: Catalog Service
-cd ../back/catalog_service && python app.py
-
-# Terminal 4: Inventory Service
-cd ../back/inventory_service && python app.py
+# Ver el proyecto en el navegador
+# http://localhost:4200
 ```
 
-### 4. Credenciales de prueba
+### Para construir (para producción)
 
-Crear un usuario Admin Global directamente en la base de datos:
+```bash
+# Build normal (desarrollo)
+ng build
 
+# Build para producción (más optimizado)
+ng build --configuration production
+
+# Los archivos compilados van a la carpeta "dist/"
 ```
-username: admin_principal
-password: (definida en la BD, debe estar hasheada con bcrypt)
-rol_id: 1 (Admin Global)
-sede_id: 1 (cualquiera)
-```
 
----
+### Para testing
 
-## Flujo de Autenticación
+```bash
+# Ejecutar pruebas unitarias
+ng test
 
-```
-1. Usuario abre /login
-2. Ingresa username y password
-3. Angular envía POST /api/auth/login
-4. API Gateway redirige a service_master:5001
-5. Backend valida credenciales
-6. Backend genera JWT (8h expiración) + refresh token (7 días)
-7. Frontend recibe { token, refresh_token, usuario }
-8. Tokens almacenados en localStorage:
-   - token
-   - refresh_token
-   - usuario (JSON)
-9. AuthInterceptor inyecta header en cada petición:
-   Authorization: Bearer {token}
-10. AuthGuard valida token en cada navegación a rutas protegidas
-11. Si token expira → AuthInterceptor llama /api/auth/refresh
-12. Si refresh falla → Redirige a /login
+# Ejecutar y ver en el navegador
+ng test --browsers=Chrome
 ```
 
 ---
 
-## Estructuras de Datos
+## Problemas comunes
 
-### Usuario (localStorage)
+### ❌ "Error: Cannot find module"
+**Causa:** No instalaste las dependencias.
+**Solución:** Ejecuta `npm install`
 
-```json
-{
-  "id": 1,
-  "username": "admin_principal",
-  "rol": {
-    "id": 1,
-    "nombre": "Admin Global"
-  },
-  "sede_id": 1
-}
+### ❌ "Error: Port 4200 is already in use"
+**Causa:** Ya hay algo corriendo en ese puerto.
+**Solución:** Cierra la otra aplicación o ejecuta `ng serve --port 4201`
+
+### ❌ La página está en blanco
+**Causa:** El backend no está corriendo.
+**Solución:** Asegúrate que todos los servicios del backend estén activos (puertos 8000, 5001, 5002, 5003, 5004)
+
+### ❌ "401 Unauthorized" al hacer peticiones
+**Causa:** Tu token expiró o no estás logueado.
+**Solución:** Cierra sesión (logout) y vuelve a entrar.
+
+### ❌ No puedo acceder a una página
+**Causa:** Tu rol no tiene permiso para esa página.
+**Solución:** Consulta la tabla de [Sistema de Roles](#sistema-de-roles-quién-ve-qué)
+
+---
+
+## Arquitectura de Carpetas Detallada
+
 ```
+Cuando quieras modificar algo, aquí está el "mapa":
 
-### Login Request
+📄 EDITAR PÁGINAS (lo que ve el usuario):
+src/app/demo/pages/
+├── login/            → LoginComponent (login.component.ts + .html + .scss)
+├── dashboard/         → DashboardComponent (home)
+├── usuarios/          → UsuariosComponent (lista de usuarios)
+├── sedes/            → SedesComponent (lista de sedes)
+├── productos/         → ProductosComponent (catálogo)
+├── inventario/        → InventarioComponent (stock)
+├── pedido/            → PedidoComponent (tomar pedidos)
+└── caja/             → CajaComponent (cobrar)
 
-```json
-{
-  "username": "admin_principal",
-  "password": "mi_password"
-}
-```
+📄 EDITAR CONEXIONES AL BACKEND:
+src/app/services/
+├── auth.service.ts     → Login, logout, refresh token
+├── sede.service.ts     → CRUD de sedes
+├── producto.service.ts → CRUD de productos
+├── inventario.service.ts → Stock y movimientos
+└── theme.service.ts    → Cambio de tema
 
-### Login Response
+📄 EDITAR SEGURIDAD:
+src/app/guards/
+├── auth.guard.ts       → ¿Estás logueado?
+└── role.guard.ts       → ¿Tienes el rol correcto?
 
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIs...",
-  "refresh_token": "eyJhbGciOiJIUzI1NiIs...",
-  "expira_en": "8h",
-  "usuario": {
-    "id": 1,
-    "username": "admin_principal",
-    "rol": { "id": 1, "nombre": "Admin Global" },
-    "sede_id": 1
-  }
-}
-```
-
-### Movimiento de Inventario (Request)
-
-```json
-{
-  "sede_id": 1,
-  "producto_id": 1,
-  "tipo_movimiento": "INGRESO",
-  "cantidad": 10,
-  "observacion": "Carga inicial"
-}
+📄 EDITAR COLORES:
+src/styles.css          → Variables CSS (tema completo)
 ```
 
 ---
 
-## Comandos Rápidos
+## Próximos Pasos (TODO)
 
-| Comando | Descripción |
-|---------|-------------|
-| `npm install` | Instalar dependencias |
-| `ng serve` | Servidor desarrollo (:4200) |
-| `ng build` | Build desarrollo |
-| `ng build --configuration production` | Build producción |
-| `ng test` | Tests unitarios |
-
----
-
-## Notas de Desarrollo
-
-- **Standalone Components**: Todos los componentes son standalone (sin módulos tradicionales)
-- **Theme Toggle**: El cambio de tema se almacena en localStorage (`app-theme`)
-- **Transiciones**: Las transiciones de tema usan `0.4s ease` para suavidad visual
-- **Auth Guard**: Todas las rutas excepto `/login` están protegidas
-- **Auth Interceptor**: Agrega automáticamente el JWT a todas las peticiones HTTP
-- **Inactividad**: El logout por inactividad se calcula con HostListener sobre eventos de usuario
+- [ ] Reports para Admin Global (pendiente)
+- [ ] Tests E2E (HU-030)
+- [ ] Exportar datos a Excel
+- [ ] Notificaciones en tiempo real
 
 ---
 
 ## Licencia
 
-MIT
+MIT - Libre para usar y modificar.
+
+---
+
+**¿Preguntas? ¿Problemas? Revisa la sección de [Problemas comunes](#problemas-comunes) primero.**

@@ -14,8 +14,8 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Skip refresh endpoint
-    if (req.url.includes('/refresh')) {
+    // Skip authentication for login and refresh endpoints
+    if (req.url.includes('/refresh') || req.url.includes('/login')) {
       return next.handle(req);
     }
 
@@ -42,6 +42,11 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleUnauthorized(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // Don't try to refresh if we're already on login page
+    if (window.location.pathname === '/login') {
+      return throwError(() => new Error('Ya estamos en login'));
+    }
+
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);

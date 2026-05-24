@@ -85,6 +85,16 @@
   }
 }
 
+.rol-badge {
+  background: var(--primary);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
 .dashboard-content {
   flex: 1;
   background: var(--bg-surface);
@@ -147,6 +157,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
 
   .button-icon {
     font-size: 38px;
@@ -173,6 +184,41 @@
   &:active {
     transform: translateY(-2px);
   }
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    border-style: dashed;
+
+    &:hover {
+      transform: none;
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border-color: var(--border);
+      box-shadow: none;
+
+      .button-icon {
+        transform: none;
+      }
+    }
+
+    .button-icon {
+      filter: grayscale(50%);
+    }
+  }
+}
+
+.badge-soon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--warning);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 /* Decorative circles - animated for theme transition */

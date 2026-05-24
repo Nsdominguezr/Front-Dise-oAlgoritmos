@@ -1,0 +1,181 @@
+<div class="pedido-container">
+  <div class="page-header">
+    <button class="back-button" (click)="volverAlDashboard()">
+      <span>←</span> Back
+    </button>
+    <h1>Table Orders</h1>
+    <div class="header-actions">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header">
+      <h2>Tables - Location {{ sedeId }}</h2>
+      <button class="btn-secondary" (click)="obtenerMesas()">
+        <span>⟳</span> Refresh
+      </button>
+    </div>
+
+    <div *ngIf="error && !loading" class="error-message">{{ error }}</div>
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    <div *ngIf="loading" class="loading">Loading...</div>
+
+    <!-- Mapa de Mesas -->
+    <div *ngIf="!loading && !pedidoActual" class="mesas-grid">
+      <div
+        *ngFor="let mesa of mesas"
+        class="mesa-card"
+        [class.mesa-libre]="mesa.estado === 'LIBRE'"
+        [class.mesa-ocupada]="mesa.estado === 'OCUPADA'"
+        (click)="seleccionarMesa(mesa)">
+        <div class="mesa-numero">{{ mesa.numero_mesa }}</div>
+        <div class="mesa-estado">{{ mesa.estado === 'LIBRE' ? 'Free' : 'Occupied' }}</div>
+      </div>
+    </div>
+
+    <!-- Si hay un pedido activo, mostrar la vista del pedido -->
+    <div *ngIf="!loading && pedidoActual" class="pedido-activo">
+      <div class="pedido-header">
+        <h3>Order #{{ pedidoActual.id }} - Table {{ pedidoActual.mesa_id }}</h3>
+        <div class="pedido-info">
+          <span class="badge" [class.badge-abierto]="pedidoActual.estado === 'ABIERTO'">
+            {{ pedidoActual.estado }}
+          </span>
+          <span class="pedido-total">Total: {{ calcularTotal() | currency:'COP':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <!-- Buscador de productos -->
+      <div *ngIf="puedeAgregarItems()" class="buscador-section">
+        <div class="form-group">
+          <label for="buscador">Search Product</label>
+          <input
+            type="text"
+            id="buscador"
+            [(ngModel)]="terminoBusqueda"
+            (input)="onSearchChange($event)"
+            placeholder="Type to search..."
+            class="form-control">
+          <div *ngIf="resultadosBusqueda.length > 0" class="resultados-busqueda">
+            <div
+              *ngFor="let producto of resultadosBusqueda"
+              class="resultado-item"
+              (click)="seleccionarProducto(producto)">
+              <span class="resultado-nombre">{{ producto.nombre }}</span>
+              <span class="resultado-precio">{{ producto.precio | currency:'COP':'symbol':'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="productoSeleccionado" class="agregar-section">
+          <div class="producto-seleccionado">
+            <span>{{ productoSeleccionado.nombre }}</span>
+            <span class="precio">{{ productoSeleccionado.precio | currency:'COP':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="cantidad-row">
+            <div class="form-group">
+              <label for="cantidad">Quantity</label>
+              <input
+                type="number"
+                id="cantidad"
+                [(ngModel)]="cantidadAAgregar"
+                min="1"
+                class="form-control">
+            </div>
+            <button class="btn-primary" (click)="agregarProducto()">
+              <span>+</span> Add
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de items -->
+      <div *ngIf="detallesPedido.length > 0" class="items-lista">
+        <h4>Items</h4>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of detallesPedido">
+              <td>{{ item.producto_nombre || 'Product #' + item.producto_id }}</td>
+              <td>{{ item.cantidad }}</td>
+              <td>{{ item.precio_unitario | currency:'COP':'symbol':'1.0-0' }}</td>
+              <td>{{ (item.cantidad * item.precio_unitario) | currency:'COP':'symbol':'1.0-0' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="detallesPedido.length === 0" class="empty-state">
+        No items in this order
+      </div>
+
+      <!-- Acciones -->
+      <div class="pedido-actions">
+        <button class="btn-secondary" (click)="verTicket()">
+          <span>📋</span> View Ticket
+        </button>
+        <button
+          class="btn-primary"
+          (click)="pasarACaja()"
+          [disabled]="detallesPedido.length === 0">
+          <span>→</span> Send to Cashier
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ticket -->
+<div *ngIf="mostrarTicket" class="modal-overlay" (click)="cerrarTicket()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Provisional Ticket</h3>
+      <button class="close-button" (click)="cerrarTicket()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="ticket-header-info">
+        <p><strong>Order #{{ pedidoActual?.id }}</strong></p>
+        <p>Table {{ pedidoActual?.mesa_id }}</p>
+        <p>Date: {{ pedidoActual?.fecha_creacion | date:'short' }}</p>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of detallesPedido">
+            <td>{{ item.producto_nombre || 'Product #' + item.producto_id }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.precio_unitario | currency:'COP':'symbol':'1.0-0' }}</td>
+            <td>{{ (item.cantidad * item.precio_unitario) | currency:'COP':'symbol':'1.0-0' }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-right"><strong>TOTAL:</strong></td>
+            <td><strong>{{ calcularTotal() | currency:'COP':'symbol':'1.0-0' }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="cerrarTicket()">Close</button>
+    </div>
+  </div>
+</div>

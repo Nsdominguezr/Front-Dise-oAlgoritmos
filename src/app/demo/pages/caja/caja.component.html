@@ -1,0 +1,150 @@
+<div class="caja-container">
+  <div class="page-header">
+    <button class="back-button" (click)="volverAlDashboard()">
+      <span>←</span> Back
+    </button>
+    <h1>Cashier</h1>
+    <div class="header-actions">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header">
+      <h2>Pending Payments - Location {{ sedeId }}</h2>
+      <button class="btn-secondary" (click)="obtenerPendientes()">
+        <span>⟳</span> Refresh
+      </button>
+    </div>
+
+    <div *ngIf="error && !loading" class="error-message">{{ error }}</div>
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    <div *ngIf="loading" class="loading">Loading...</div>
+
+    <!-- Lista de pedidos pendientes -->
+    <div *ngIf="!loading && pedidosPendientes.length > 0" class="pedidos-lista">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Table</th>
+            <th>Total</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pedido of pedidosPendientes">
+            <td>#{{ pedido.pedido_id }}</td>
+            <td>{{ pedido.numero_mesa }}</td>
+            <td class="total-cell">{{ pedido.total | currency:'COP':'symbol':'1.0-0' }}</td>
+            <td>{{ pedido.fecha | date:'short' }}</td>
+            <td>
+              <button class="btn-primary btn-sm" (click)="seleccionarPedido(pedido)">
+                Charge
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!loading && pedidosPendientes.length === 0" class="empty-state">
+      No pending payments
+    </div>
+  </div>
+</div>
+
+<!-- Modal Checkout -->
+<div *ngIf="mostrarConfirmacion && pedidoSeleccionado" class="modal-overlay" (click)="cerrarConfirmacion()">
+  <div class="modal-content modal-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Close Order #{{ pedidoSeleccionado.id }}</h3>
+      <button class="close-button" (click)="cerrarConfirmacion()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Detalle del pedido -->
+      <div class="pedido-info">
+        <p><strong>Table:</strong> {{ pedidoSeleccionado.mesa_id }}</p>
+        <p><strong>Date:</strong> {{ pedidoSeleccionado.fecha_creacion | date:'short' }}</p>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pedidoSeleccionado.detalles">
+            <td>Product #{{ item.producto_id }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.precio_unitario | currency:'COP':'symbol':'1.0-0' }}</td>
+            <td>{{ (item.cantidad * item.precio_unitario) | currency:'COP':'symbol':'1.0-0' }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-right"><strong>TOTAL:</strong></td>
+            <td><strong>{{ calcularTotal() | currency:'COP':'symbol':'1.0-0' }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <!-- Selector de medio de pago -->
+      <div class="pago-section">
+        <h4>Payment Method</h4>
+        <div class="medios-pago">
+          <label class="medio-pago-option" [class.selected]="medioPago === 'EFECTIVO'">
+            <input
+              type="radio"
+              name="medioPago"
+              value="EFECTIVO"
+              [(ngModel)]="medioPago">
+            <span class="medio-label">Cash</span>
+            <span class="medio-icon">💵</span>
+          </label>
+
+          <label class="medio-pago-option" [class.selected]="medioPago === 'TC'">
+            <input
+              type="radio"
+              name="medioPago"
+              value="TC"
+              [(ngModel)]="medioPago">
+            <span class="medio-label">Credit Card</span>
+            <span class="medio-icon">💳</span>
+          </label>
+
+          <label class="medio-pago-option" [class.selected]="medioPago === 'TD'">
+            <input
+              type="radio"
+              name="medioPago"
+              value="TD"
+              [(ngModel)]="medioPago">
+            <span class="medio-label">Debit Card</span>
+            <span class="medio-icon">💳</span>
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="!medioPago" class="error-message validation-message">
+        Select a payment method to close the order
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="cerrarConfirmacion()">Cancel</button>
+      <button
+        type="button"
+        class="btn-primary btn-success"
+        (click)="procesarCierre()"
+        [disabled]="!puedeCerrar()">
+        <span>✓</span> Close Order
+      </button>
+    </div>
+  </div>
+</div>

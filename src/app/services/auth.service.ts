@@ -121,4 +121,69 @@ export class AuthService {
     }
     return !this.isTokenExpired(token);
   }
+
+  /**
+   * Obtiene el rol actual del usuario
+   */
+  getRol(): string | null {
+    const usuario = this.getUsuario();
+    return usuario?.rol?.nombre || usuario?.rol || null;
+  }
+
+  /**
+   * Obtiene la sede actual del usuario
+   */
+  getSedeId(): number | null {
+    const usuario = this.getUsuario();
+    return usuario?.sede_id || null;
+  }
+
+  /**
+   * Obtiene el usuario completo del localStorage
+   */
+  getUsuario(): any | null {
+    const usuarioStorage = localStorage.getItem('usuario');
+    if (!usuarioStorage) return null;
+    try {
+      return JSON.parse(usuarioStorage);
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Verifica si el usuario tiene el rol especificado
+   */
+  tieneRol(rol: string): boolean {
+    const rolActual = this.getRol();
+    return rolActual === rol;
+  }
+
+  /**
+   * Verifica si es Admin Global
+   */
+  esAdminGlobal(): boolean {
+    return this.tieneRol('Admin Global');
+  }
+
+  /**
+   * Verifica si es Admin Local
+   */
+  esAdminLocal(): boolean {
+    return this.tieneRol('Admin Local');
+  }
+
+  /**
+   * Verifica si es Cajero
+   */
+  esCajero(): boolean {
+    return this.tieneRol('Cajero');
+  }
+
+  /**
+   * Verifica si es Mesero
+   */
+  esMesero(): boolean {
+    return this.tieneRol('Mesero');
+  }
 }
