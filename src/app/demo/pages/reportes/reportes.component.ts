@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReportesService, OptimizarColaRequest, OptimizarColaResponse } from '../../../services/reportes.service';
+import { InventarioService } from '../../../services/inventario.service';
 import { AuthService } from '../../../services/auth.service';
 import { ThemeToggleComponent } from '../../../shared/components/theme-toggle/theme-toggle.component';
 
@@ -27,6 +28,7 @@ export class ReportesComponent implements OnInit {
 
   constructor(
     private reportesService: ReportesService,
+    private inventarioService: InventarioService,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -59,12 +61,37 @@ export class ReportesComponent implements OnInit {
         link.click();
         window.URL.revokeObjectURL(url);
 
-        this.successMessage = 'Reporte descargado exitosamente';
+        this.successMessage = 'Financial report downloaded successfully';
         this.loading = false;
         setTimeout(() => this.successMessage = '', 3000);
       },
       error: (err: any) => {
-        this.error = err.error?.mensaje || 'Error al descargar reporte';
+        this.error = err.error?.mensaje || 'Error downloading report';
+        this.loading = false;
+      }
+    });
+  }
+
+  descargarReporteInventario(): void {
+    this.loading = true;
+    this.error = '';
+    this.successMessage = '';
+
+    this.inventarioService.descargarReporteInventario().subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `reporte_inventario_${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+
+        this.successMessage = 'Inventory report downloaded successfully';
+        this.loading = false;
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (err: any) => {
+        this.error = err.error?.mensaje || 'Error downloading inventory report';
         this.loading = false;
       }
     });
@@ -87,7 +114,7 @@ export class ReportesComponent implements OnInit {
         this.optimizacionLoading = false;
       },
       error: (err: any) => {
-        this.error = err.error?.mensaje || 'Error al optimizar cola';
+        this.error = err.error?.mensaje || 'Error optimizing queue';
         this.optimizacionLoading = false;
       }
     });

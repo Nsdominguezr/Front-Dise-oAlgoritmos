@@ -41,4 +41,14 @@ export class InventarioService {
   }): Observable<any> {
     return this.http.post(`${this.apiUrl}/redistribuir-stock`, request, { headers: this.getHeaders() });
   }
+
+  /**
+   * Descarga reporte de inventario por sede (CSV)
+   */
+  descargarReporteInventario(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/reportes/inventario`, {
+      headers: this.getHeaders(),
+      responseType: 'blob'
+    });
+  }
 }

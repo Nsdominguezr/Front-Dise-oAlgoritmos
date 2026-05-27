@@ -10,11 +10,20 @@
   </div>
 
   <div class="content-card">
-    <h2>Financial Report (CSV)</h2>
-    <p>Download the consolidated financial report by date and sede.</p>
+    <h2>Inventory Report (CSV)</h2>
+    <p>Download the consolidated inventory report with stock by sede.</p>
 
     <div *ngIf="error" class="error-message">{{ error }}</div>
     <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+
+    <button class="btn-primary" (click)="descargarReporteInventario()" [disabled]="loading">
+      {{ loading ? 'Downloading...' : '📥 Download Inventory Report' }}
+    </button>
+  </div>
+
+  <div class="content-card">
+    <h2>Financial Report (CSV)</h2>
+    <p>Download the consolidated financial report by date and sede.</p>
 
     <button class="btn-primary" (click)="descargarReporteFinanciero()" [disabled]="loading">
       {{ loading ? 'Downloading...' : '📥 Download Financial Report' }}

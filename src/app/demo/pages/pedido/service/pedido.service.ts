@@ -21,7 +21,7 @@ export class PedidoService {
 
   // HU-019: Obtener mesas de una sede
   obtenerMesas(sedeId: number): Observable<Mesa[]> {
-    return this.http.get<Mesa[]>(`${this.apiUrl}/mesas/${sedeId}`);
+    return this.http.get<Mesa[]>(`${this.apiUrl}/mesas/${sedeId}`, { headers: this.getHeaders() });
   }
 
   // HU-020: Abrir un pedido
