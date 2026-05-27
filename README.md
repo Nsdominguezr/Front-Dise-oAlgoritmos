@@ -1,6 +1,5 @@
 # Bar Don Juancho - Frontend
 
-**Sistema de gestión táctil multi-sede para bares y restaurantes**
 
 ---
 
@@ -23,7 +22,7 @@
 
 ## Descripción General
 
-**Bar Don Juancho** es una aplicación web Angular diseñada para gestionar bares/restaurantes con múltiples sedes. Permite administrar usuarios, productos, inventario, pedidos y cobros de forma táctil.
+**Bar Don Juancho** es una aplicación web Angular diseñada para gestionar bares con múltiples sedes. Permite administrar usuarios, productos, inventario, pedidos y cobros de forma táctil.
 
 ### Características Principales
 
