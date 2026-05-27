@@ -14,6 +14,7 @@ interface Usuario {
   };
   sede_id: number;
   creado_en: string;
+  activo: boolean;
 }
 
 interface RolOpcion {
@@ -172,6 +173,22 @@ export class UsuariosComponent implements OnInit {
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
+    });
+  }
+
+  desactivarUsuario(usuario: Usuario): void {
+    if (!confirm(`¿Estás seguro de desactivar al usuario "${usuario.username}"? No podrá iniciar sesión.`)) {
+      return;
+    }
+
+    this.authService.desactivarUsuario(usuario.id).subscribe({
+      next: (response: any) => {
+        alert(response.mensaje || 'Usuario desactivado exitosamente');
+        this.obtenerUsuarios();
+      },
+      error: (err: any) => {
+        alert(err.error?.mensaje || 'Error al desactivar usuario');
+      }
     });
   }
 }

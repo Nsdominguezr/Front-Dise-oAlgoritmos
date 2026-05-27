@@ -200,4 +200,36 @@ export class AuthService {
   esMesero(): boolean {
     return this.tieneRol('Mesero');
   }
+
+  /**
+   * Desactiva un usuario (soft delete)
+   */
+  desactivarUsuario(usuarioId: number): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.patch(
+      `${this.apiUrl}/usuarios/${usuarioId}/desactivar`,
+      {},
+      { headers }
+    );
+  }
+
+  /**
+   * Descarga reporte CSV
+   */
+  descargarReporte(tipo: 'inventario' | 'financiero'): Observable<Blob> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get(
+      `${this.apiUrl}/reportes/${tipo}`,
+      {
+        headers,
+        responseType: 'blob'
+      }
+    );
+  }
 }

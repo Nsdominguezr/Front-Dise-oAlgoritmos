@@ -17,66 +17,70 @@
       </button>
     </div>
 
-    <!-- Error -->
     <div *ngIf="error && !loading" class="error-message">
-      ⚠️ {{ error }}
+      {{ error }}
       <button class="btn-secondary mt-2" (click)="obtenerUsuarios()">Retry</button>
     </div>
 
     <div *ngIf="loading" class="loading">Loading...</div>
 
-    <!-- Tabla de usuarios -->
-    <div *ngIf="!loading && !error" class="usuarios-table">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Location</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let usuario of usuarios">
-            <td>{{ usuario.id }}</td>
-            <td>{{ usuario.username }}</td>
-            <td>
-              <span class="rol-badge" [ngClass]="getRolClase(usuario.rol.nombre)">
-                {{ usuario.rol.nombre }}
-              </span>
-            </td>
-            <td>{{ getSedeNombre(usuario.sede_id) }}</td>
-            <td>{{ formatearFecha(usuario.creado_en) }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <table *ngIf="!loading && !error && usuarios.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let usuario of usuarios">
+          <td>{{ usuario.id }}</td>
+          <td>{{ usuario.username }}</td>
+          <td>
+            <span class="rol-badge" [ngClass]="getRolClase(usuario.rol.nombre)">
+              {{ usuario.rol.nombre }}
+            </span>
+          </td>
+          <td>{{ getSedeNombre(usuario.sede_id) }}</td>
+          <td>
+            <span [class]="usuario.activo ? 'badge-active' : 'badge-inactive'">
+              {{ usuario.activo ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td>{{ formatearFecha(usuario.creado_en) }}</td>
+          <td>
+            <button
+              class="btn-danger btn-sm"
+              (click)="desactivarUsuario(usuario)"
+              [disabled]="!usuario.activo || usuario.rol.nombre === 'Admin Global'">
+              Deactivate
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <div *ngIf="usuarios.length === 0" class="empty-state">
-        <p>No users registered</p>
-      </div>
+    <div *ngIf="!loading && !error && usuarios.length === 0" class="empty-state">
+      No users registered
     </div>
   </div>
 </div>
 
 <!-- Modal de registro -->
-<div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+<div *ngIf="mostrarModal" class="modal-overlay" (click)="cerrarModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>Register New User</h2>
-      <button class="modal-close" (click)="cerrarModal()">✕</button>
+      <h3>New User</h3>
+      <button class="close-button" (click)="cerrarModal()">×</button>
     </div>
 
     <div class="modal-body">
-      <!-- Éxito -->
-      <div *ngIf="registroExito" class="alert alert-success">
-        {{ registroExito }}
-      </div>
-
-      <!-- Error -->
-      <div *ngIf="registroError" class="alert alert-error">
-        {{ registroError }}
-      </div>
+      <div *ngIf="registroExito" class="success-message">{{ registroExito }}</div>
+      <div *ngIf="registroError" class="error-message">{{ registroError }}</div>
 
       <form *ngIf="!registroExito" (ngSubmit)="registrarUsuario()">
         <div class="form-group">
@@ -87,8 +91,7 @@
             [(ngModel)]="registroUsername"
             name="username"
             placeholder="Ex: admin_north"
-            required
-          />
+            required>
         </div>
 
         <div class="form-group">
@@ -99,8 +102,7 @@
             [(ngModel)]="registroPassword"
             name="password"
             placeholder="Minimum 6 characters"
-            required
-          />
+            required>
         </div>
 
         <div class="form-group">
@@ -109,8 +111,7 @@
             id="rol"
             [(ngModel)]="registroRolId"
             name="rol"
-            required
-          >
+            required>
             <option [ngValue]="null" disabled>Select a role</option>
             <option *ngFor="let rol of roles" [value]="rol.id">
               {{ rol.nombre }}
@@ -124,8 +125,7 @@
             id="sede"
             [(ngModel)]="registroSedeId"
             name="sede"
-            required
-          >
+            required>
             <option [ngValue]="null" disabled>Select a location</option>
             <option [value]="1">North Location</option>
             <option [value]="2">Central Location</option>

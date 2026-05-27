@@ -120,39 +120,47 @@
 .error-message {
   background: rgba(233, 69, 96, 0.15);
   color: var(--danger);
-  padding: 15px;
+  padding: 10px;
   border-radius: 4px;
   margin-bottom: 15px;
   border: 1px solid var(--danger);
-  text-align: center;
+}
+
+.success-message {
+  background: rgba(39, 174, 96, 0.15);
+  color: var(--success);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid var(--success);
 }
 
 .mt-2 {
   margin-top: 10px;
 }
 
-.usuarios-table {
-  overflow-x: auto;
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+  }
 
-    th, td {
-      padding: 12px;
-      text-align: left;
-      color: var(--text-primary);
-      border-bottom: 1px solid var(--border);
-    }
+  th {
+    background: var(--bg-elevated);
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 
-    th {
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
-
-    tbody tr:hover {
-      background: var(--bg-elevated);
-    }
+  tr:hover {
+    background: var(--bg-elevated);
   }
 }
 
@@ -195,13 +203,13 @@
   padding: 15px 20px;
   border-bottom: 1px solid var(--border);
 
-  h2, h3 {
+  h3 {
     margin: 0;
     color: var(--text-primary);
   }
 }
 
-.modal-close {
+.close-button {
   background: none;
   border: none;
   font-size: 24px;
@@ -259,23 +267,34 @@
   margin-top: 20px;
 }
 
-.alert {
-  padding: 10px;
+.btn-danger {
+  padding: 8px 16px;
+  background: var(--danger);
+  color: white;
+  border: none;
   border-radius: 4px;
-  margin-bottom: 15px;
-  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 
-  &.alert-success {
-    background: rgba(39, 174, 96, 0.15);
-    color: var(--success);
-    border: 1px solid var(--success);
+  &:hover {
+    background: #c93a50;
+    transform: translateY(-1px);
   }
 
-  &.alert-error {
-    background: rgba(233, 69, 96, 0.15);
-    color: var(--danger);
-    border: 1px solid var(--danger);
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
   }
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
 }
 
 .rol-badge {
@@ -308,4 +327,22 @@
     color: var(--success);
     border: 1px solid var(--success);
   }
+}
+
+.badge-active {
+  background: rgba(39, 174, 96, 0.2);
+  color: var(--success);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid var(--success);
+}
+
+.badge-inactive {
+  background: rgba(233, 69, 96, 0.2);
+  color: var(--danger);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid var(--danger);
 }
