@@ -1,0 +1,91 @@
+<div class="reportes-container">
+  <div class="page-header">
+    <button class="back-button" (click)="volverAlDashboard()">
+      <span>←</span> Back
+    </button>
+    <h1>Reports & Optimization</h1>
+    <div class="header-actions">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <h2>Financial Report (CSV)</h2>
+    <p>Download the consolidated financial report by date and sede.</p>
+
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+
+    <button class="btn-primary" (click)="descargarReporteFinanciero()" [disabled]="loading">
+      {{ loading ? 'Downloading...' : '📥 Download Financial Report' }}
+    </button>
+  </div>
+
+  <div class="content-card">
+    <h2>Order Queue Optimization (Knapsack Algorithm)</h2>
+    <p>Enter the maximum number of items capacity to optimize which orders to process first.</p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="capacidad">Max Items Capacity</label>
+        <input
+          type="number"
+          id="capacidad"
+          [(ngModel)]="capacidadItems"
+          min="1"
+          [disabled]="optimizacionLoading">
+      </div>
+
+      <button class="btn-primary" (click)="optimizarCola()" [disabled]="optimizacionLoading">
+        {{ optimizacionLoading ? 'Calculating...' : '⚡ Optimize' }}
+      </button>
+    </div>
+
+    <div *ngIf="resultadoOptimizacion" class="optimizacion-result">
+      <h3>Optimization Result</h3>
+
+      <div class="result-stats">
+        <div class="stat">
+          <span class="stat-label">Sede ID:</span>
+          <span class="stat-value">{{ resultadoOptimizacion.sede_id }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Capacity:</span>
+          <span class="stat-value">{{ resultadoOptimizacion.capacidad_items }} items</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Items Used:</span>
+          <span class="stat-value">{{ resultadoOptimizacion.items_total }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Total Benefit:</span>
+          <span class="stat-value">{{ resultadoOptimizacion.beneficio_total | currency:'COP' }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Total Pending Orders:</span>
+          <span class="stat-value">{{ resultadoOptimizacion.total_pedidos_pendientes }}</span>
+        </div>
+      </div>
+
+      <div class="orders-section">
+        <h4>Selected Orders (to process first):</h4>
+        <ul *ngIf="resultadoOptimizacion.pedidos_seleccionados.length > 0">
+          <li *ngFor="let pedidoId of resultadoOptimizacion.pedidos_seleccionados">
+            Order #{{ pedidoId }}
+          </li>
+        </ul>
+        <p *ngIf="resultadoOptimizacion.pedidos_seleccionados.length === 0">No orders selected</p>
+
+        <h4>Omitted Orders:</h4>
+        <ul *ngIf="resultadoOptimizacion.pedidos_omitidos.length > 0">
+          <li *ngFor="let pedidoId of resultadoOptimizacion.pedidos_omitidos">
+            Order #{{ pedidoId }}
+          </li>
+        </ul>
+        <p *ngIf="resultadoOptimizacion.pedidos_omitidos.length === 0">No orders omitted</p>
+      </div>
+
+      <button class="btn-secondary" (click)="limpiarOptimizacion()">Clear</button>
+    </div>
+  </div>
+</div>

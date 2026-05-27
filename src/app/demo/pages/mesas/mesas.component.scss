@@ -1,0 +1,52 @@
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.table-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.table-card:hover {
+  transform: translateY(-2px);
+}
+
+.table-card.mesa-libre {
+  border-color: #28a745;
+}
+
+.table-card.mesa-ocupada {
+  border-color: #dc3545;
+}
+
+.table-number {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.table-status {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.table-card.mesa-libre .table-status {
+  color: #28a745;
+}
+
+.table-card.mesa-ocupada .table-status {
+  color: #dc3545;
+}
+
+.btn-sm {
+  padding: 4px 12px;
+  font-size: 12px;
+}

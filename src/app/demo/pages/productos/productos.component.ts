@@ -114,6 +114,23 @@ export class ProductosComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
+  eliminarProducto(producto: Producto): void {
+    if (!confirm(`¿Estás seguro de eliminar el producto "${producto.nombre}"? Esta acción lo retirará del catálogo.`)) {
+      return;
+    }
+
+    this.productoService.desactivarProducto(producto.id).subscribe({
+      next: (response: any) => {
+        this.error = '';
+        alert(response.mensaje || 'Producto eliminado exitosamente');
+        this.obtenerProductos();
+      },
+      error: (err: any) => {
+        this.error = err.error?.mensaje || 'Error al eliminar producto';
+      }
+    });
+  }
+
   formatPrecio(precio: number): string {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',

@@ -1,0 +1,76 @@
+<div class="mesas-container">
+  <div class="page-header">
+    <button class="back-button" (click)="volverAlDashboard()">
+      <span>←</span> Back
+    </button>
+    <h1>Table Management</h1>
+    <div class="header-actions">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header">
+      <h2>Tables List</h2>
+      <button class="btn-primary" (click)="abrirModalCrear()">
+        <span>+</span> New Table
+      </button>
+    </div>
+
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+
+    <div *ngIf="!loading && mesas.length === 0" class="empty-state">
+      No tables registered for this sede
+    </div>
+
+    <div *ngIf="!loading && mesas.length > 0" class="tables-grid">
+      <div *ngFor="let mesa of mesas" class="table-card" [ngClass]="getClassEstado(mesa.estado)">
+        <div class="table-number">{{ mesa.numero_mesa }}</div>
+        <div class="table-status">{{ mesa.estado }}</div>
+        <button class="btn-danger btn-sm" (click)="eliminarMesa(mesa)" [disabled]="mesa.estado === 'OCUPADA'">
+          Eliminate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear Mesa -->
+<div *ngIf="mostrarModalCrear" class="modal-overlay" (click)="cerrarModalCrear()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>New Table</h3>
+      <button class="close-button" (click)="cerrarModalCrear()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="formError" class="error-message">{{ formError }}</div>
+
+      <form (ngSubmit)="crearMesa()">
+        <div class="form-group">
+          <label for="numeroMesa">Table Number *</label>
+          <input
+            type="text"
+            id="numeroMesa"
+            [(ngModel)]="numeroMesa"
+            name="numeroMesa"
+            placeholder="Ex: M1, M2, 01"
+            [disabled]="formLoading"
+            required>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="cerrarModalCrear()" [disabled]="formLoading">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="formLoading">
+            {{ formLoading ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

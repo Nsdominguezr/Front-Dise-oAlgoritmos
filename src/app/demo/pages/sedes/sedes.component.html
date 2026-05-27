@@ -28,6 +28,7 @@
           <th>Name</th>
           <th>Address</th>
           <th>Phone</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +37,9 @@
           <td>{{ sede.nombre }}</td>
           <td>{{ sede.direccion || '-' }}</td>
           <td>{{ sede.telefono || '-' }}</td>
+          <td>
+            <button class="btn-danger btn-sm" (click)="eliminarSede(sede)">Eliminate</button>
+          </td>
         </tr>
       </tbody>
     </table>

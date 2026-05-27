@@ -35,7 +35,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         { path: '/usuarios', icon: '👥', label: 'Manage Users', roles: ['Admin Global'] },
         { path: '/inventario', icon: '📦', label: 'Manage Inventory', roles: ['Admin Global', 'Admin Local'] },
         { path: '/sedes', icon: '🏪', label: 'Manage Locations', roles: ['Admin Global'] },
-        { path: '/reports', icon: '📈', label: 'Reports', roles: ['Admin Global'], disabled: true }
+        { path: '/mesas', icon: '🪑', label: 'Manage Tables', roles: ['Admin Global', 'Admin Local'] },
+        { path: '/historial', icon: '📜', label: 'Payment History', roles: ['Admin Global', 'Cajero'] },
+        { path: '/reportes', icon: '📈', label: 'Reports', roles: ['Admin Global', 'Admin Local'] }
     ];
 
     filteredMenuItems: MenuItem[] = [];
@@ -43,8 +45,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     constructor(private router: Router, private authService: AuthService) {}
 
     ngOnInit(): void {
-        this.usuario = this.authService.getUsuario();
         this.rol = this.authService.getRol();
+        this.usuario = this.authService.getUsuario();
         console.log('👤 Usuario cargado:', this.usuario, 'Rol:', this.rol);
         this.filtrarMenuPorRol();
         this.setupInactivityTracking();

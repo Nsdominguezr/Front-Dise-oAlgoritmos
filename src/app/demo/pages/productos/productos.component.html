@@ -29,6 +29,7 @@
           <th>Price</th>
           <th>Category</th>
           <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +42,9 @@
             <span [class]="producto.activo ? 'badge-active' : 'badge-inactive'">
               {{ producto.activo ? 'Active' : 'Inactive' }}
             </span>
+          </td>
+          <td>
+            <button class="btn-danger btn-sm" (click)="eliminarProducto(producto)" [disabled]="!producto.activo">Eliminate</button>
           </td>
         </tr>
       </tbody>

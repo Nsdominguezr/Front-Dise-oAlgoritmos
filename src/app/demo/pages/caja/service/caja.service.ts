@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PedidoCaja, CheckoutRequest, CheckoutResponse, PedidoCajaDetalle } from '../models/caja.model';
+import { AuthService } from '../../../../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,10 @@ import { PedidoCaja, CheckoutRequest, CheckoutResponse, PedidoCajaDetalle } from
 export class CajaService {
   private apiUrl = 'https://localhost:8000/api/pedidos';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });

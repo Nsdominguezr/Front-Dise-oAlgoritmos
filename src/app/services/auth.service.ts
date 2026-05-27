@@ -123,23 +123,45 @@ export class AuthService {
   }
 
   /**
-   * Obtiene el rol actual del usuario
+   * Verifica si el usuario tiene el rol especificado
    */
-  getRol(): string | null {
-    const usuario = this.getUsuario();
-    return usuario?.rol?.nombre || usuario?.rol || null;
+  tieneRol(rol: string): boolean {
+    const rolActual = this.getRol();
+    return rolActual === rol;
   }
 
   /**
-   * Obtiene la sede actual del usuario
+   * Obtiene el user_id del token decodificado
+   */
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = this.decodeToken(token);
+    return payload?.user_id || null;
+  }
+
+  /**
+   * Obtiene la sede actual del token decodificado
    */
   getSedeId(): number | null {
-    const usuario = this.getUsuario();
-    return usuario?.sede_id || null;
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = this.decodeToken(token);
+    return payload?.sede_id || null;
   }
 
   /**
-   * Obtiene el usuario completo del localStorage
+   * Obtiene el rol actual del token decodificado
+   */
+  getRol(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = this.decodeToken(token);
+    return payload?.rol || null;
+  }
+
+  /**
+   * Obtiene el usuario completo del localStorage (para datos extendidos)
    */
   getUsuario(): any | null {
     const usuarioStorage = localStorage.getItem('usuario');
@@ -149,14 +171,6 @@ export class AuthService {
     } catch {
       return null;
     }
-  }
-
-  /**
-   * Verifica si el usuario tiene el rol especificado
-   */
-  tieneRol(rol: string): boolean {
-    const rolActual = this.getRol();
-    return rolActual === rol;
   }
 
   /**

@@ -54,11 +54,13 @@ export class AuthInterceptor implements HttpInterceptor {
       return this.authService.refreshToken().pipe(
         switchMap((response: any) => {
           if (response.token) {
+            // El refresh solo devuelve token y expira_en, no usuario ni refresh_token
+            const usuarioActual = this.authService.getUsuario();
             this.authService.actualizarToken(
               response.token,
               response.expira_en,
-              response.usuario,
-              response.refresh_token
+              usuarioActual  // Mantener el usuario que ya tenemos
+              // No pasar refresh_token porque el backend no lo-renueva
             );
             this.refreshTokenSubject.next(response.token);
             this.isRefreshing = false;

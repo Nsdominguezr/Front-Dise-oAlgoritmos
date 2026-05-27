@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Inventario, MovimientoInventario, MovimientoRequest } from '../demo/pages/inventario/models/inventario.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,10 @@ import { Inventario, MovimientoInventario, MovimientoRequest } from '../demo/pag
 export class InventarioService {
   private apiUrl = 'https://localhost:8000/api/inventario';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });

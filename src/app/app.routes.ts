@@ -7,6 +7,9 @@ import { ProductosComponent } from './demo/pages/productos/productos.component';
 import { InventarioComponent } from './demo/pages/inventario/inventario.component';
 import { PedidoComponent } from './demo/pages/pedido/pedido.component';
 import { CajaComponent } from './demo/pages/caja/caja.component';
+import { MesasComponent } from './demo/pages/mesas/mesas.component';
+import { HistorialComponent } from './demo/pages/historial/historial.component';
+import { ReportesComponent } from './demo/pages/reportes/reportes.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 
@@ -60,5 +63,23 @@ export const routes: Routes = [
     component: CajaComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin Global', 'Cajero'] }
+  },
+  {
+    path: 'mesas',
+    component: MesasComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin Global', 'Admin Local'] }
+  },
+  {
+    path: 'historial',
+    component: HistorialComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin Global', 'Cajero'] }
+  },
+  {
+    path: 'reportes',
+    component: ReportesComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin Global', 'Admin Local'] }
   }
 ];

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { PedidoService } from './service/pedido.service';
 import { ProductoService } from '../../../services/producto.service';
+import { AuthService } from '../../../services/auth.service';
 import { ThemeToggleComponent } from '../../../shared/components/theme-toggle/theme-toggle.component';
 import { Mesa, Pedido, DetallePedido } from './models/pedido.model';
 import { Producto } from '../productos/models/producto.model';
@@ -51,27 +52,25 @@ export class PedidoComponent implements OnInit, OnDestroy {
   constructor(
     private pedidoService: PedidoService,
     private productoService: ProductoService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
       return;
     }
 
-    const usuarioStorage = localStorage.getItem('usuario');
-    if (usuarioStorage) {
-      this.usuario = JSON.parse(usuarioStorage);
-      this.sedeId = this.usuario.sede_id || null;
-    }
+    this.sedeId = this.authService.getSedeId();
 
     if (!this.sedeId) {
       this.error = 'No se encontró la sede asignada. Contacte al administrador.';
       this.loading = false;
       return;
     }
+
+    this.usuario = { id: this.authService.getUserId() };
 
     this.obtenerMesas();
     this.obtenerProductos();

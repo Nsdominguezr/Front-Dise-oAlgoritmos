@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { InventarioService } from '../../../services/inventario.service';
+import { AuthService } from '../../../services/auth.service';
 import { SedeService } from '../../../services/sede.service';
 import { ProductoService } from '../../../services/producto.service';
 import { ThemeToggleComponent } from '../../../shared/components/theme-toggle/theme-toggle.component';

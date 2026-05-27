@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CajaService } from './service/caja.service';
+import { AuthService } from '../../../services/auth.service';
 import { ThemeToggleComponent } from '../../../shared/components/theme-toggle/theme-toggle.component';
 import { PedidoCaja, PedidoCajaDetalle, CheckoutRequest } from './models/caja.model';
 
@@ -39,27 +40,25 @@ export class CajaComponent implements OnInit, OnDestroy {
 
   constructor(
     private cajaService: CajaService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
       return;
     }
 
-    const usuarioStorage = localStorage.getItem('usuario');
-    if (usuarioStorage) {
-      this.usuario = JSON.parse(usuarioStorage);
-      this.sedeId = this.usuario.sede_id || null;
-    }
+    this.sedeId = this.authService.getSedeId();
 
     if (!this.sedeId) {
       this.error = 'No se encontró la sede asignada. Contacte al administrador.';
       this.loading = false;
       return;
     }
+
+    this.usuario = { id: this.authService.getUserId() };
 
     this.obtenerPendientes();
   }

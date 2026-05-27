@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Sede, SedeRequest } from '../demo/pages/sedes/models/sede.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,10 @@ import { Sede, SedeRequest } from '../demo/pages/sedes/models/sede.model';
 export class SedeService {
   private apiUrl = 'https://localhost:8000/api/sedes';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -24,5 +25,9 @@ export class SedeService {
 
   crearSede(sede: SedeRequest): Observable<any> {
     return this.http.post(this.apiUrl, sede, { headers: this.getHeaders() });
+  }
+
+  desactivarSede(sedeId: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${sedeId}`, {}, { headers: this.getHeaders() });
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Producto, ProductoRequest } from '../demo/pages/productos/models/producto.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,10 @@ import { Producto, ProductoRequest } from '../demo/pages/productos/models/produc
 export class ProductoService {
   private apiUrl = 'https://localhost:8000/api/productos';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -24,5 +25,9 @@ export class ProductoService {
 
   crearProducto(producto: ProductoRequest): Observable<any> {
     return this.http.post(this.apiUrl, producto, { headers: this.getHeaders() });
+  }
+
+  desactivarProducto(productoId: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${productoId}`, {}, { headers: this.getHeaders() });
   }
 }

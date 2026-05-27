@@ -108,4 +108,21 @@ export class SedesComponent implements OnInit {
   volverAlDashboard(): void {
     this.router.navigate(['/dashboard']);
   }
+
+  eliminarSede(sede: Sede): void {
+    if (!confirm(`¿Estás seguro de eliminar la sede "${sede.nombre}"? Esta acción la ocultará del sistema.`)) {
+      return;
+    }
+
+    this.sedeService.desactivarSede(sede.id).subscribe({
+      next: (response: any) => {
+        this.error = '';
+        alert(response.mensaje || 'Sede eliminada exitosamente');
+        this.obtenerSedes();
+      },
+      error: (err: any) => {
+        this.error = err.error?.mensaje || 'Error al eliminar sede';
+      }
+    });
+  }
 }
