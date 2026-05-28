@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         { path: '/sedes', icon: '🏪', label: 'Manage Locations', roles: ['Admin Global'] },
         { path: '/mesas', icon: '🪑', label: 'Manage Tables', roles: ['Admin Global', 'Admin Local'] },
         { path: '/historial', icon: '📜', label: 'Payment History', roles: ['Admin Global', 'Cajero'] },
-        { path: '/reportes', icon: '📈', label: 'Reports', roles: ['Admin Global', 'Admin Local'] }
+        { path: '/reportes', icon: '📈', label: 'Reports', roles: ['Admin Global'] }
     ];
 
     filteredMenuItems: MenuItem[] = [];
