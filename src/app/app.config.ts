@@ -4,6 +4,7 @@ import { provideHttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { SessionService } from './services/session.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +15,7 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
+    SessionService
   ]
 };

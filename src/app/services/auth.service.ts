@@ -232,4 +232,11 @@ export class AuthService {
       }
     );
   }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('usuario');
+    console.log('🚪 Sesión cerrada');
+  }
 }

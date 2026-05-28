@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { Subject, fromEvent, merge } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ThemeToggleComponent } from '../../../shared/components/theme-toggle/theme-toggle.component';
 import { AuthService } from '../../../services/auth.service';
 
@@ -25,8 +25,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     usuario: any = null;
     rol: string | null = null;
     private destroy$ = new Subject<void>();
-    private inactivityTimer: any;
-    private readonly INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos
 
     menuItems: MenuItem[] = [
         { path: '/productos', icon: '🏷️', label: 'Manage Products', roles: ['Admin Global'] },
@@ -49,7 +47,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.usuario = this.authService.getUsuario();
         console.log('👤 Usuario cargado:', this.usuario, 'Rol:', this.rol);
         this.filtrarMenuPorRol();
-        this.setupInactivityTracking();
     }
 
     private filtrarMenuPorRol(): void {
@@ -58,37 +55,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         );
     }
 
-    private setupInactivityTracking(): void {
-        const events = ['click', 'mousemove', 'keydown', 'scroll'];
-        const activity$ = merge(
-            ...events.map(event => fromEvent(window, event))
-        ).pipe(
-            debounceTime(300),
-            takeUntil(this.destroy$)
-        );
-
-        this.resetInactivityTimer();
-
-        activity$.subscribe(() => {
-            console.log('🟢 Actividad detectada, renovando sesión');
-            this.resetInactivityTimer();
-        });
-    }
-
-    private resetInactivityTimer(): void {
-        if (this.inactivityTimer) {
-            clearTimeout(this.inactivityTimer);
-        }
-        this.inactivityTimer = setTimeout(() => {
-            this.logout();
-        }, this.INACTIVITY_TIMEOUT);
-    }
-
     logout(): void {
-        console.log('🚪 Cerrando sesión por inactividad...');
-        localStorage.removeItem('token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('usuario');
+        this.authService.logout();
         this.router.navigate(['/login']);
     }
 
