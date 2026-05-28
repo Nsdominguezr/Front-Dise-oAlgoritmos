@@ -23,7 +23,6 @@ export interface PedidoCajaDetalle {
 }
 
 export interface DetalleCaja {
-  id: number;
   producto_id: number;
   cantidad: number;
   precio_unitario: number;

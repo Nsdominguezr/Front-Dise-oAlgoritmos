@@ -134,17 +134,17 @@
       <div *ngIf="!medioPago" class="error-message validation-message">
         Select a payment method to close the order
       </div>
-    </div>
 
-    <div class="modal-actions">
-      <button type="button" class="btn-secondary" (click)="cerrarConfirmacion()">Cancel</button>
-      <button
-        type="button"
-        class="btn-primary btn-success"
-        (click)="procesarCierre()"
-        [disabled]="!puedeCerrar()">
-        <span>✓</span> Close Order
-      </button>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="cerrarConfirmacion()">Cancel</button>
+        <button
+          type="button"
+          class="btn-primary btn-success"
+          (click)="procesarCierre()"
+          [disabled]="!puedeCerrar()">
+          <span>✓</span> Close Order
+        </button>
+      </div>
     </div>
   </div>
 </div>
