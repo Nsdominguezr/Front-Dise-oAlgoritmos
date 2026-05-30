@@ -66,6 +66,18 @@
         </tr>
       </tbody>
     </table>
+
+    <div *ngIf="!loading && inventarios.length > 0 && lastPage > 1" class="pagination-info">
+      Page {{ currentPage }} of {{ lastPage }} - Total {{ total }} records
+    </div>
+
+    <div *ngIf="!loading && inventarios.length > 0 && lastPage > 1" class="pagination">
+      <button class="pagination-btn" (click)="goToPage(1)" [disabled]="currentPage === 1">««</button>
+      <button class="pagination-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">«</button>
+      <button *ngFor="let page of getPages()" class="pagination-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+      <button class="pagination-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === lastPage">»</button>
+      <button class="pagination-btn" (click)="goToPage(lastPage)" [disabled]="currentPage === lastPage">»»</button>
+    </div>
   </div>
 </div>
 
@@ -188,6 +200,18 @@
           </tr>
         </tbody>
       </table>
+
+      <div *ngIf="movimientos.length > 0 && lastPage > 1" class="pagination-info">
+        Page {{ currentPage }} of {{ lastPage }} - Total {{ total }} records
+      </div>
+
+      <div *ngIf="movimientos.length > 0 && lastPage > 1" class="pagination">
+        <button class="pagination-btn" (click)="goToPageHistorial(1)" [disabled]="currentPage === 1">««</button>
+        <button class="pagination-btn" (click)="goToPageHistorial(currentPage - 1)" [disabled]="currentPage === 1">«</button>
+        <button *ngFor="let page of getPagesHistorial()" class="pagination-btn" [class.active]="page === currentPage" (click)="goToPageHistorial(page)">{{ page }}</button>
+        <button class="pagination-btn" (click)="goToPageHistorial(currentPage + 1)" [disabled]="currentPage === lastPage">»</button>
+        <button class="pagination-btn" (click)="goToPageHistorial(lastPage)" [disabled]="currentPage === lastPage">»»</button>
+      </div>
     </div>
 
     <div class="modal-actions">

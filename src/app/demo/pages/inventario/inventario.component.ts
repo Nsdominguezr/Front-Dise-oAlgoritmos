@@ -39,6 +39,9 @@ export class InventarioComponent implements OnInit {
   observacion = '';
 
   movimientos: any[] = [];
+  currentPage = 1;
+  lastPage = 1;
+  total = 0;
 
   constructor(
     private inventarioService: InventarioService,
@@ -89,15 +92,24 @@ export class InventarioComponent implements OnInit {
     }
   }
 
-  obtenerStock(): void {
+  obtenerStock(page: number = 1): void {
     if (!this.sedeSeleccionada) return;
 
     this.loading = true;
     this.error = '';
 
-    this.inventarioService.obtenerStockSede(this.sedeSeleccionada).subscribe({
+    this.inventarioService.obtenerStockSede(this.sedeSeleccionada, page).subscribe({
       next: (response: any) => {
-        this.inventarios = Array.isArray(response) ? response : [];
+        if (Array.isArray(response.data)) {
+          this.inventarios = response.data;
+        } else {
+          this.inventarios = [];
+        }
+        if (response.meta) {
+          this.currentPage = response.meta.current_page;
+          this.lastPage = response.meta.last_page;
+          this.total = response.meta.total;
+        }
         this.loading = false;
       },
       error: (err: any) => {
@@ -105,6 +117,20 @@ export class InventarioComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.lastPage && page !== this.currentPage) {
+      this.obtenerStock(page);
+    }
+  }
+
+  getPages(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.lastPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   abrirModalIngreso(): void {
@@ -210,22 +236,43 @@ export class InventarioComponent implements OnInit {
     });
   }
 
-  verHistorial(): void {
+  verHistorial(page: number = 1): void {
     if (!this.sedeSeleccionada) return;
 
     this.mostrarHistorial = true;
-    this.inventarioService.obtenerStockSede(this.sedeSeleccionada).subscribe({
+    this.inventarioService.obtenerHistorial(this.sedeSeleccionada, page).subscribe({
       next: (response: any) => {
-        if (Array.isArray(response) && response.length > 0) {
-          this.movimientos = response[0].movimientos || [];
+        if (Array.isArray(response.data)) {
+          this.movimientos = response.data;
+        } else if (Array.isArray(response)) {
+          this.movimientos = response;
         } else {
           this.movimientos = [];
+        }
+        if (response.meta) {
+          this.currentPage = response.meta.current_page;
+          this.lastPage = response.meta.last_page;
+          this.total = response.meta.total;
         }
       },
       error: (err: any) => {
         console.error('Error al cargar historial', err);
       }
     });
+  }
+
+  goToPageHistorial(page: number): void {
+    if (page >= 1 && page <= this.lastPage && page !== this.currentPage) {
+      this.verHistorial(page);
+    }
+  }
+
+  getPagesHistorial(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.lastPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   volverAlDashboard(): void {
